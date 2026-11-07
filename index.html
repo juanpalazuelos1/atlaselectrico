@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atlas Eléctrico de México | Heliovolt</title>
+<meta name="description" content="Atlas interactivo: de los recursos energéticos al consumidor, con datos de CFE, PRODESEN y el DOF.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>:root{
+  --navy:#071F3C; --navy2:#0F3254; --panel:#224C76; --sky:#CEE6F7; --sky2:#EAF4FC;
+  --yel:#FEC520; --org:#FDAD17; --green:#79A928; --green-d:#0B3D36;
+  --bg:#F6FAFD; --card:#FFFFFF; --ink:#071F3C; --mute:#4A6078; --line:#D5E2EE;
+  --fosil:#0F3254; --nuclear:#FEC520; --renov:#79A928; --limpia:#A7CC6B;
+  --ok:#2E7D32; --bad:#B3261E; --r:14px;
+  --f-head:'Poppins','Segoe UI',system-ui,sans-serif; --f-body:'Inter','Segoe UI',system-ui,sans-serif; --f-mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#04152A;--card:#0A2543;--ink:#EAF4FC;--mute:#A9C0D6;--line:#1B3D63;--sky2:#0C2B4D;--fosil:#7FB0E3;--limpia:#8BB445}
+}
+:root[data-theme="dark"]{--bg:#04152A;--card:#0A2543;--ink:#EAF4FC;--mute:#A9C0D6;--line:#1B3D63;--sky2:#0C2B4D;--fosil:#7FB0E3;--limpia:#8BB445}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);line-height:1.55;font-size:16px}
+h1,h2,h3,h4{font-family:var(--f-head);line-height:1.2;margin:0 0 .5rem}
+h2{font-size:1.6rem}h3{font-size:1.2rem}h4{font-size:1rem}
+p{margin:.4rem 0 .8rem}
+a{color:var(--panel)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+code,.mono{font-family:var(--f-mono);font-size:.92em}
+
+/* header */
+header.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.top .bar{display:flex;align-items:center;gap:14px;padding:8px 16px;max-width:1180px;margin:0 auto;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff}
+.brand svg{height:46px;width:auto;background:#fff;border-radius:10px;padding:2px}
+.brand b{font-family:var(--f-head);font-size:1.05rem;letter-spacing:.04em}
+.brand small{display:block;font-size:.72rem;color:var(--sky);font-weight:400}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+nav.tabs button{background:transparent;color:#dbe9f7;border:1px solid transparent;padding:8px 12px;border-radius:999px;font:600 .85rem var(--f-head);cursor:pointer}
+nav.tabs button:hover{background:rgba(255,255,255,.1)}
+nav.tabs button[aria-current="true"]{background:var(--yel);color:var(--navy)}
+nav.tabs button:focus-visible,.btn:focus-visible,.chip:focus-visible,.card-item:focus-visible,.zone:focus-visible,.term:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--org);outline-offset:2px}
+.stripe{height:4px;background:linear-gradient(90deg,var(--yel),var(--org),var(--green),var(--panel))}
+
+/* hero */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--panel) 100%);color:#fff;padding:34px 0 30px}
+.hero h1{font-size:clamp(1.6rem,4vw,2.5rem);max-width:900px}
+.hero p{max-width:760px;color:#dbe9f7}
+.hero .tagrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font:600 .72rem var(--f-head);background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.25)}
+
+main{padding:22px 0 60px}
+section.mod{display:none}
+section.mod.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.mod-head{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin:6px 0 14px}
+.mod-head .num{font:700 2.6rem var(--f-head);color:var(--yel);-webkit-text-stroke:1px var(--navy);line-height:1}
+.mod-head p{margin:0;color:var(--mute);max-width:700px}
+.sec{margin:34px 0 10px;padding-top:10px;border-top:2px dashed var(--line)}
+.sec h3{display:flex;align-items:center;gap:8px}
+.sec h3 .n{background:var(--navy);color:var(--yel);border-radius:8px;padding:0 9px;font-size:.9rem}
+
+/* cards and grids */
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:0 1px 3px rgba(7,31,60,.06)}
+.card h4{margin-bottom:.2rem}
+.card .src{font-size:.74rem;color:var(--mute);margin-top:8px;border-top:1px solid var(--line);padding-top:6px}
+.badge{display:inline-block;font:700 .66rem var(--f-head);padding:2px 8px;border-radius:999px;letter-spacing:.03em;vertical-align:middle;margin-left:6px;white-space:nowrap}
+.b-cfe{background:#FFE9A8;color:#5C4300}.b-nac{background:#CFE6F8;color:#0C3B66}.b-calc{background:#E4F0CF;color:#2E4A0B}
+.b-plan{background:#EADFF6;color:#4A2373}.b-legal{background:#E9E9E9;color:#333}.b-nd{background:#F8D7D4;color:#7A1A14}
+.callout{border-left:5px solid var(--yel);background:var(--sky2);padding:10px 14px;border-radius:0 10px 10px 0;margin:10px 0;font-size:.93rem}
+.callout.warn{border-color:var(--org)}.callout.bad{border-color:var(--bad)}.callout.ok{border-color:var(--green)}
+.kpi{display:flex;flex-direction:column;gap:2px}
+.kpi .v{font:700 2rem var(--f-head);color:var(--panel)}
+.kpi .u{font-size:.9rem;color:var(--mute)}
+.kpi .l{font-size:.85rem}
+.kpi.nd .v{color:var(--bad);font-size:1.2rem}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 .82rem var(--f-body);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:10px;padding:9px 16px;font:600 .88rem var(--f-head);cursor:pointer}
+.btn.alt{background:var(--yel);color:var(--navy)}.btn.ghost{background:transparent;color:var(--panel);border:1px solid var(--line)}
+select,input[type=number],input[type=text]{font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);max-width:100%}
+input[type=range]{width:100%;accent-color:var(--panel)}
+label.f{display:block;font-size:.85rem;font-weight:600;margin:8px 0 2px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+table.t{border-collapse:collapse;width:100%;font-size:.86rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+table.t th{background:var(--sky2);font-family:var(--f-head);font-size:.78rem}
+.scroll{overflow-x:auto}
+details.data{margin-top:6px;font-size:.82rem}
+details.data summary{cursor:pointer;color:var(--panel);font-weight:600}
+
+/* tooltips */
+.term{border-bottom:2px dotted var(--org);cursor:help}
+#tip{position:fixed;z-index:200;max-width:300px;background:var(--navy);color:#fff;border:1px solid var(--yel);padding:9px 12px;border-radius:10px;font-size:.84rem;line-height:1.4;box-shadow:0 6px 20px rgba(0,0,0,.35);pointer-events:none;opacity:0;transition:opacity .12s}
+#tip.on{opacity:1}#tip b{color:var(--yel)}
+
+/* charts */
+.chart{width:100%;height:auto;display:block}
+.chart text{font-family:var(--f-body);fill:var(--ink)}
+.chart .ax{stroke:var(--line)}.chart .gl{stroke:var(--line);stroke-dasharray:3 3}
+.chart .bar:hover,.chart .pt:hover{filter:brightness(1.12);stroke:var(--ink);stroke-width:1}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:.78rem;margin:4px 0}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+
+/* classifier */
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:60px;padding:10px;border:2px dashed var(--line);border-radius:12px}
+.card-item{background:var(--card);border:2px solid var(--line);border-radius:10px;padding:7px 11px;font:600 .84rem var(--f-body);cursor:grab;user-select:none}
+.card-item small{display:block;font-weight:400;color:var(--mute);font-size:.7rem}
+.card-item.sel{border-color:var(--org);box-shadow:0 0 0 3px rgba(253,173,23,.35)}
+.card-item.ok{border-color:var(--green);background:#EEF6DC;color:#173300;cursor:default}
+.card-item.bad{border-color:var(--bad);animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.zones{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));margin-top:12px}
+.zone{border:2px solid var(--line);border-radius:12px;padding:10px;min-height:120px;background:var(--card);text-align:left;color:var(--ink);font:inherit;cursor:pointer}
+.zone h4{margin:0 0 6px;font-size:.92rem}
+.zone.over{border-color:var(--org);background:var(--sky2)}
+.zone .drop{display:flex;flex-wrap:wrap;gap:5px}
+.z-fosil h4{color:var(--fosil)}.z-renov h4{color:#4F7A12}.z-nuclear h4{color:#8A6A00}.z-depende h4{color:var(--panel)}
+.fb{min-height:56px}
+
+/* flow / conversion */
+.flow{display:flex;gap:6px;flex-wrap:wrap;align-items:stretch;margin:8px 0}
+.stage{flex:1 1 130px;border:2px solid var(--line);background:var(--card);border-radius:12px;padding:8px 10px;cursor:pointer;text-align:left;font:inherit;color:var(--ink);position:relative}
+.stage .k{font-size:.68rem;color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.stage b{font-family:var(--f-head);font-size:.9rem}
+.stage[aria-pressed="true"]{border-color:var(--org);background:var(--sky2)}
+.stage:not(:last-child)::after{content:"➜";position:absolute;right:-13px;top:50%;transform:translateY(-50%);color:var(--org);z-index:2;font-size:.9rem}
+@media(max-width:640px){.stage:not(:last-child)::after{content:"⬇";right:50%;top:auto;bottom:-13px;transform:translateX(50%)}.stage{flex-basis:100%}}
+
+/* map */
+.map{height:420px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--sky2)}
+.mapfb{width:100%;height:auto;background:var(--sky2);border-radius:12px;border:1px solid var(--line)}
+.leaflet-container{font-family:var(--f-body)}
+.mk{width:22px;height:22px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.5)}
+
+/* findings */
+.fcard{display:flex;flex-direction:column;gap:6px}
+.fcard .tema{font:700 .7rem var(--f-head);text-transform:uppercase;letter-spacing:.06em}
+.t-rec{color:#4F7A12}.t-gen{color:var(--panel)}.t-tra{color:#B87500}.t-dis{color:#7A3FA0}
+.fcard h4{font-size:1rem}
+.tl{position:relative;margin:10px 0 10px 8px;padding-left:22px;border-left:4px solid var(--yel)}
+.tl .ev{position:relative;margin-bottom:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer;width:100%;text-align:left;font:inherit;color:var(--ink)}
+.tl .ev::before{content:"";position:absolute;left:-33px;top:16px;width:16px;height:16px;border-radius:50%;background:var(--navy);border:3px solid var(--yel)}
+.tl .ev[aria-expanded="true"]{border-color:var(--org);background:var(--sky2)}
+.tl .ev .d{font:700 .78rem var(--f-head);color:var(--panel)}
+.tl .ev .more{display:none;margin-top:6px;font-size:.9rem}
+.tl .ev[aria-expanded="true"] .more{display:block}
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px}
+.cmp>div{border-radius:12px;padding:12px;border:2px solid var(--line);background:var(--card)}
+.cmp .h1{border-color:#9bb6d1}.cmp .h2{border-color:var(--org)}.cmp .h3{border-color:var(--green)}
+footer.foot{background:var(--navy);color:#cfe0f1;padding:22px 0;font-size:.85rem}
+footer.foot a{color:var(--yel)}
+.sr{position:absolute;left:-9999px}
+@media print{header.top,nav.tabs{display:none}}
+</style></head>
+<body>
+<header class="top"><div class="bar"><a class="brand" href="#m0" aria-label="Heliovolt, inicio"><svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 1024" width="1536" height="1024">
+<title>Heliovolt — logotipo</title>
+<defs>
+ <radialGradient id="sol" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#FFD84A"/><stop offset=".55" stop-color="#FEC520"/><stop offset="1" stop-color="#FDAD17"/></radialGradient>
+ <linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CEE6F7"/><stop offset="1" stop-color="#EAF4FC"/></linearGradient>
+ <linearGradient id="pn" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3F78B5"/><stop offset="1" stop-color="#0F3254"/></linearGradient>
+ <linearGradient id="pn2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#224C76"/><stop offset="1" stop-color="#071F3C"/></linearGradient>
+ <linearGradient id="hoja" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#79A928"/><stop offset="1" stop-color="#5A8A22"/></linearGradient>
+ <clipPath id="disco"><circle cx="768" cy="507" r="440"/></clipPath>
+ <clipPath id="bajo"><rect x="0" y="780" width="1536" height="244"/></clipPath>
+</defs>
+<rect width="1536" height="1024" fill="#fff"/>
+<!-- disco y aro -->
+<circle cx="768" cy="507" r="440" fill="url(#cielo)"/>
+<g clip-path="url(#disco)" fill="#fff" opacity=".85">
+ <ellipse cx="430" cy="300" rx="70" ry="38"/><ellipse cx="480" cy="318" rx="60" ry="28"/>
+ <ellipse cx="1120" cy="420" rx="62" ry="32"/><ellipse cx="1090" cy="438" rx="55" ry="24"/></g>
+<circle cx="768" cy="507" r="440" fill="none" stroke="#B7D6F0" stroke-width="10"/>
+<g clip-path="url(#bajo)"><circle cx="768" cy="507" r="488" fill="#071F3C"/></g>
+<path d="M712,44 A466,466 0 1 0 824,44" fill="none" stroke="#071F3C" stroke-width="20" transform="rotate(0)"/>
+<g clip-path="url(#bajo)"><circle cx="768" cy="507" r="452" fill="none" stroke="#fff" stroke-width="6"/></g>
+<!-- sol -->
+<g fill="#FEC520" stroke="#fff" stroke-width="5" stroke-linejoin="round"><path d="M734,150 L765,27 L796,150 Z"/><path d="M811,153 L879,76 L868,178 Z"/><path d="M880,187 L988,131 L921,233 Z"/><path d="M927,243 L1049,234 L948,302 Z"/><path d="M662,178 L651,76 L719,153 Z"/><path d="M609,233 L542,131 L650,187 Z"/><path d="M582,302 L481,234 L603,243 Z"/></g>
+<path d="M585,342 A180,180 0 0 1 945,342 Z" fill="url(#sol)" stroke="#fff" stroke-width="10" stroke-linejoin="round"/>
+<path d="M645,292 A150,150 0 0 1 775,182" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" opacity=".45"/>
+<!-- soporte y panel -->
+<rect x="770" y="560" width="56" height="40" fill="#0F3254"/>
+<polygon points="1022,440 1042,438 1044,590 1024,590" fill="#224C76"/>
+<polygon points="561,354 1134,246 1005,532 416,582" fill="#8FA7BF"/>
+<polygon points="569,352 1122,254 999,526 424,574" fill="#fff"/>
+<polygon points="573,350 1115,259 995,522 428,570" fill="#EAF1F8"/>
+<polygon points="580,352 701,332 658,402 535,419" fill="url(#pn)"/><polygon points="531,424 655,408 612,478 487,492" fill="url(#pn2)"/><polygon points="483,497 609,483 566,554 439,565" fill="url(#pn)"/><polygon points="714,330 835,310 795,383 671,400" fill="url(#pn2)"/><polygon points="668,406 792,389 751,463 626,477" fill="url(#pn)"/><polygon points="622,482 748,468 707,542 580,553" fill="url(#pn2)"/><polygon points="848,308 970,288 931,365 808,382" fill="url(#pn)"/><polygon points="805,387 928,371 890,447 764,461" fill="url(#pn2)"/><polygon points="761,467 887,453 848,530 721,541" fill="url(#pn)"/><polygon points="983,286 1104,266 1068,346 944,363" fill="url(#pn2)"/><polygon points="941,369 1065,352 1029,432 903,446" fill="url(#pn)"/><polygon points="900,452 1026,438 990,517 862,528" fill="url(#pn2)"/>
+<!-- hojas -->
+<path d="M210,315 C330,322 420,380 395,470 C385,520 385,560 392,588 C300,560 235,470 210,315 Z" fill="url(#hoja)"/>
+<path d="M283,375 C350,440 380,520 392,588" fill="none" stroke="#0B3D36" stroke-width="7" stroke-linecap="round"/>
+<path d="M505,412 C430,418 385,470 392,540 L400,584 C440,520 480,470 505,412 Z" fill="url(#hoja)"/>
+<path d="M462,452 C430,490 405,540 400,584" fill="none" stroke="#0B3D36" stroke-width="6" stroke-linecap="round"/>
+<path d="M272,513 C330,508 365,535 378,586 C320,590 285,560 272,513 Z" fill="url(#hoja)"/>
+<path d="M308,538 C340,550 362,568 378,586" fill="none" stroke="#0B3D36" stroke-width="5" stroke-linecap="round"/>
+<!-- enchufe -->
+<rect x="1243" y="255" width="15" height="44" rx="4" fill="#071F3C"/><rect x="1289" y="255" width="15" height="44" rx="4" fill="#071F3C"/>
+<path d="M1220,305 H1332 V345 C1332,372 1312,392 1288,394 H1264 C1240,392 1220,372 1220,345 Z" fill="#071F3C"/>
+<rect x="1262" y="392" width="30" height="16" fill="#071F3C"/>
+<path d="M1274,405 V440 C1274,520 1210,568 1150,572 C1128,574 1112,580 1104,590" fill="none" stroke="#071F3C" stroke-width="22" stroke-linecap="round"/>
+<!-- banner -->
+<g fill="#FEC520">
+ <rect x="222" y="578" width="1092" height="230" rx="52"/>
+ <rect x="158" y="628" width="150" height="145" rx="72"/><rect x="1228" y="628" width="150" height="145" rx="72"/></g>
+<g fill="#071F3C">
+ <rect x="236" y="592" width="1064" height="202" rx="40"/>
+ <rect x="172" y="642" width="122" height="117" rx="58"/><rect x="1242" y="642" width="122" height="117" rx="58"/></g>
+<g stroke="#FEC520" stroke-width="7" stroke-linecap="round">
+ <line x1="246" y1="675" x2="325" y2="675"/><line x1="222" y1="706" x2="326" y2="706"/>
+ <line x1="1210" y1="675" x2="1290" y2="675"/><line x1="1210" y1="706" x2="1312" y2="706"/>
+ <line x1="522" y1="850" x2="694" y2="850"/><line x1="842" y1="850" x2="1014" y2="850"/></g>
+<polygon points="806,796 748,872 780,872 726,952 814,846 778,846" fill="#FEC520"/>
+<path d="M446.1513777467736 640.8001395186606V743.639344262295H421.1008022322986V701.3024066968957H382.1332403208929V743.639344262295H357.0826648064179V640.8001395186606H382.1332403208929V681.0861527729334H421.1008022322986V640.8001395186606Z M495.08057202650855 660.869898848971V681.6721311475409H528.6278339727938V701.0094175095919H495.08057202650855V723.5695849319847H533.0226717823509V743.639344262295H470.0299965120335V640.8001395186606H533.0226717823509V660.869898848971Z M580.193930938263 724.3020579002441H613.0087199162888V743.639344262295H555.1433554237879V640.8001395186606H580.193930938263Z M655.9316358562958 640.8001395186606V743.639344262295H630.8810603418207V640.8001395186606Z M675.7084059993025 691.926752703174Q675.7084059993025 676.8378095570282 682.8133937914197 664.8252528775723Q689.9183815835369 652.8126961981164 702.0041855598187 646.073944890129Q714.0899895361005 639.3351935821415 728.5929543076387 639.3351935821415Q743.0959190791768 639.3351935821415 755.1817230554586 646.073944890129Q767.2675270317405 652.8126961981164 774.2260202302059 664.8252528775723Q781.1845134286712 676.8378095570282 781.1845134286712 691.926752703174Q781.1845134286712 707.0156958493197 774.1527729333799 719.1014998256016Q767.1210324380886 731.1873038018834 755.1084757586327 737.926055109871Q743.0959190791768 744.6648064178584 728.5929543076387 744.6648064178584Q714.0899895361005 744.6648064178584 702.0041855598187 737.926055109871Q689.9183815835369 731.1873038018834 682.8133937914197 719.1014998256016Q675.7084059993025 707.0156958493197 675.7084059993025 691.926752703174ZM755.6944541332404 691.926752703174Q755.6944541332404 678.3027554935472 748.2964771538193 670.1723055458667Q740.8985001743984 662.0418555981862 728.5929543076387 662.0418555981862Q716.1409138472271 662.0418555981862 708.7429368678061 670.0990582490408Q701.3449598883851 678.1562608998953 701.3449598883851 691.926752703174Q701.3449598883851 705.5507499128008 708.7429368678061 713.6811998604812Q716.1409138472271 721.8116498081617 728.5929543076387 721.8116498081617Q740.8985001743984 721.8116498081617 748.2964771538193 713.6079525636553Q755.6944541332404 705.4042553191489 755.6944541332404 691.926752703174Z M897.5012207882804 640.8001395186606 861.0240669689571 743.639344262295H829.6742239274503L793.1970701081269 640.8001395186606H819.8590861527729L845.3491454482037 718.4422741541681L870.9856993372863 640.8001395186606Z M909.5137774677363 691.926752703174Q909.5137774677363 676.8378095570282 916.6187652598535 664.8252528775723Q923.7237530519707 652.8126961981164 935.8095570282525 646.073944890129Q947.8953610045343 639.3351935821415 962.3983257760725 639.3351935821415Q976.9012905476106 639.3351935821415 988.9870945238924 646.073944890129Q1001.0728985001743 652.8126961981164 1008.0313916986397 664.8252528775723Q1014.989884897105 676.8378095570282 1014.989884897105 691.926752703174Q1014.989884897105 707.0156958493197 1007.9581444018137 719.1014998256016Q1000.9264039065224 731.1873038018834 988.9138472270665 737.926055109871Q976.9012905476106 744.6648064178584 962.3983257760725 744.6648064178584Q947.8953610045343 744.6648064178584 935.8095570282525 737.926055109871Q923.7237530519707 731.1873038018834 916.6187652598535 719.1014998256016Q909.5137774677363 707.0156958493197 909.5137774677363 691.926752703174ZM989.4998256016742 691.926752703174Q989.4998256016742 678.3027554935472 982.1018486222531 670.1723055458667Q974.7038716428322 662.0418555981862 962.3983257760725 662.0418555981862Q949.9462853156609 662.0418555981862 942.5483083362399 670.0990582490408Q935.1503313568189 678.1562608998953 935.1503313568189 691.926752703174Q935.1503313568189 705.5507499128008 942.5483083362399 713.6811998604812Q949.9462853156609 721.8116498081617 962.3983257760725 721.8116498081617Q974.7038716428322 721.8116498081617 982.1018486222531 713.6079525636553Q989.4998256016742 705.4042553191489 989.4998256016742 691.926752703174Z M1059.8172305545866 724.3020579002441H1092.6320195326125V743.639344262295H1034.7666550401116V640.8001395186606H1059.8172305545866Z M1184.4841297523542 640.8001395186606V660.869898848971H1157.2361353331007V743.639344262295H1132.1855598186257V660.869898848971H1104.937565399372V640.8001395186606Z" fill="#fff"/>
+</svg><span><b>HELIOVOLT</b><small>Atlas Eléctrico de México</small></span></a>
+<nav class="tabs" aria-label="Módulos"></nav><button class="btn" id="theme" aria-label="Cambiar tema claro u oscuro">◐ Tema</button></div></header>
+<div class="hero"><div class="wrap"><h1>Atlas Eléctrico de México: de los recursos energéticos al consumidor</h1>
+<p>Recorre la cadena eléctrica (recursos, generación, transmisión y distribución) con datos de los Informes Anuales de CFE 2022-2024, el PRODESEN 2023-2037 y el Diario Oficial de la Federación.</p>
+<div class="tagrow"><span class="pill">Solo CFE</span><span class="pill">Nacional · SEN</span><span class="pill">Cálculo propio</span><span class="pill">Dato no disponible</span></div>
+<p style="margin-top:14px"><button class="btn" id="start">Comenzar →</button></p></div></div>
+<main class="wrap"><section class="mod" id="m0"></section><section class="mod" id="m1"></section><section class="mod" id="m2"></section><section class="mod" id="m3"></section><section class="mod" id="m4"></section></main>
+<footer class="foot"><div class="wrap"><b>Fuentes:</b> Informes Anuales CFE 2022, 2023 y 2024; PRODESEN 2023-2037, cap. 4 (SENER); DOF 20/12/2013; DOF 11/08/2014 (LIE); DOF 18/03/2025.<br>Las cifras «Solo CFE» no son nacionales. Los cálculos propios se marcan y las coordenadas del mapa son aproximadas. Mapa base: © colaboradores de OpenStreetMap. Proyecto académico TE1020, Tec de Monterrey.</div></footer>
+<script>/* ============================================================
+   Atlas Eléctrico de México — DATOS VERIFICADOS
+   Cada valor trae documento y página (pie "Pág. N" del PDF de CFE;
+   página impresa del PRODESEN; página del DOF).
+   "calc" = cálculo propio a partir de datos de los documentos.
+   null = "Dato no disponible" en los documentos cargados.
+   ============================================================ */
+const DOC = {
+  cfe22: 'Informe Anual CFE 2022 (27/04/2023)',
+  cfe23: 'Informe Anual CFE 2023 (versión 25/04/2024)',
+  cfe24: 'Informe Anual CFE 2024 (versión 07/07/2025)',
+  prod:  'PRODESEN 2023-2037, cap. 4 (SENER)',
+  lie14: 'DOF 11/08/2014, Ley de la Industria Eléctrica',
+  cpeum: 'DOF 20/12/2013, Decreto de reforma constitucional en materia de energía',
+  dec25: 'DOF 18/03/2025, Decreto de leyes del sector energético'
+};
+const ref = (d, p) => DOC[d] + (p ? ', p. ' + p : '');
+
+/* ---------- CFE: generación bruta por tecnología (GWh) ---------- */
+/* 2022 y 2023: Informe 2023, anexo estadístico p. 301. 2023 y 2024: Informe 2024, p. 27 */
+const TECH = [
+  { id:'cc',   name:'Ciclo combinado',    cat:'fosil',  gwh:{2022:50392,2023:58234,2024:61490}, mw:{2022:10912.38,2023:10912.4,2024:10912.4} },
+  { id:'vap',  name:'Vapor convencional', cat:'fosil',  gwh:{2022:17657,2023:29336,2024:28135}, mw:{2022:9747.6,2023:9747.6,2024:9697.6} },
+  { id:'carb', name:'Carboeléctrica',     cat:'fosil',  gwh:{2022:15186,2023:15307,2024:14012}, mw:{2022:5463.45,2023:5463.5,2024:5463.5} },
+  { id:'tg',   name:'Turbogás',           cat:'fosil',  gwh:{2022:7332, 2023:8168, 2024:8379},  mw:{2022:2953.33,2023:2942.0,2024:2940.9} },
+  { id:'dsl',  name:'Diésel',             cat:'fosil',  gwh:{2022:1157, 2023:2657, 2024:2851},  mw:{} },
+  { id:'tj',   name:'Turbojet',           cat:'fosil',  gwh:{2022:38,   2023:124,  2024:209},   mw:{} },
+  { id:'ci',   name:'Combustión interna', cat:'fosil',  gwh:{},                                 mw:{2022:362.44,2023:1009.3,2024:1011.9} },
+  { id:'nuc',  name:'Nucleoeléctrica',    cat:'nuclear',gwh:{2022:10850,2023:12386,2024:12307}, mw:{2022:1608,2023:1608,2024:1608} },
+  { id:'hid',  name:'Hidroeléctrica',     cat:'renov',  gwh:{2022:34110,2023:19568,2024:22354}, mw:{2022:12125.36,2023:12143.6,2024:12155.6} },
+  { id:'geo',  name:'Geotermoeléctrica',  cat:'renov',  gwh:{2022:4543, 2023:4321, 2024:3692},  mw:{2022:808.08,2023:808.1,2024:808.1} },
+  { id:'eol',  name:'Eoloeléctrica',      cat:'renov',  gwh:{2022:70,   2023:86,   2024:75},    mw:{2022:85.7,2023:85.7,2024:85.7} },
+  { id:'fv',   name:'Solar fotovoltaica', cat:'renov',  gwh:{2022:7,    2023:274,  2024:555},   mw:{2022:6.0,2023:126.0,2024:433.0} }
+];
+const TECH_TOTAL = {2022:141343, 2023:150462, 2024:154059};
+const TECH_SRC = {
+  gwh: 'Generación bruta CFE: 2022 y 2023 en ' + ref('cfe23','301') + '; 2023 y 2024 en ' + ref('cfe24','27') + '. Fuente primaria: SIACIG.',
+  mw:  'Capacidad efectiva CFE: 2022 en ' + ref('cfe23','17') + '; 2023 y 2024 en ' + ref('cfe24','22') + ' (el 2023 hidroeléctrico se toma de este último: 12,143.6 MW).'
+};
+const CAP_EPS5 = { cc:15990.5, eol:612.9, total:16603.4, srcPage:'22' }; // PIE agrupados en EPS Generación V, 2024
+
+const CAT = {
+  fosil:  { name:'Fósil',     color:'#0F3254' },
+  nuclear:{ name:'Nuclear',   color:'#FEC520' },
+  renov:  { name:'Renovable', color:'#79A928' }
+};
+
+/* ---------- Nacional (SEN): PRODESEN 2023-2037 cap. 4 ---------- */
+const NAC = {
+  gen2022Gwh: 340713, // p. 59
+  limpiasPct2022: 31.2, fosilPct2022: 68.8,
+  mix2022: [ // Figura 4.9, p. 59 (porcentajes tal como se publican)
+    {n:'Ciclo combinado',v:55.1,c:'fosil'},{n:'Termoeléctrica',v:5.9,c:'fosil'},{n:'Carboeléctrica',v:4.2,c:'fosil'},
+    {n:'Turbogás',v:3.0,c:'fosil'},{n:'Combustión interna',v:0.7,c:'fosil'},{n:'Otros fósiles',v:0.1,c:'fosil'},
+    {n:'Nucleoeléctrica',v:3.1,c:'nuclear'},
+    {n:'Hidráulica',v:10.4,c:'renov'},{n:'Eoloeléctrica',v:6.0,c:'renov'},{n:'Solar fotovoltaica',v:6.0,c:'renov'},
+    {n:'Geotérmica',v:1.3,c:'renov'},{n:'Bioenergía',v:0.6,c:'renov'},
+    {n:'Cogeneración eficiente',v:1.2,c:'limpia'},{n:'Otros limpios',v:2.5,c:'limpia'}
+  ],
+  limpiasSerie: { years:[2018,2019,2020,2021,2022], vals:[22.5,22.2,26.6,29.5,31.2] }, // Fig. 4.10, p. 60
+  capSerie: { years:[2016,2017,2018,2019,2020,2021,2022], vals:[66664,68531,72958,78447,83121,86153,89890] }, // Fig. 4.1, p. 53
+  cap2022: { interconectada:89890, gd:2613, total:92503 }, // Cuadro 4.1, p. 52
+  cap2037: 157098, capLimpia2022Pct: 36.9, // p. 52 y p. 54
+  capGrowth1822: 19.4, consumoGrowth1822: 7, // p. 53
+  margenReserva: { SIN:21.3, SIBC:20.9, SIBCS:35 } // p. 62
+};
+
+/* ---------- Centrales (net GWh por central: tablas "Generación Neta" de cada informe) ---------- */
+const COORD_NOTE = 'Coordenadas aproximadas (nivel localidad/municipio). NO provienen de los informes CFE: validar con una fuente oficial antes de la entrega.';
+const PLANTS = [
+  { id:'chic', n:'C.H. Manuel Moreno Torres (Chicoasén)', t:'hid', e:'Chiapas', m:'Chicoasén', eSrc:ref('cfe23','238 (proyecto Chicoasén II, mismo municipio)'),
+    mw:null, gwh:{2022:6733.52,2023:3735.39,2024:3337.8}, g:[ref('cfe22','109'),ref('cfe23','83'),ref('cfe24','61')], lat:16.944, lon:-93.102 },
+  { id:'malp', n:'C.H. Malpaso', t:'hid', e:'Chiapas', m:'Mezcalapa', eSrc:ref('cfe23','239'),
+    mw:1080, mwSrc:ref('cfe24','25'), gwh:{2022:3896.12,2023:2540.44,2024:2182.5}, g:[ref('cfe22','109'),ref('cfe23','83'),ref('cfe24','61')], lat:17.183, lon:-93.600 },
+  { id:'angs', n:'C.H. Belisario Domínguez (Angostura)', t:'hid', e:'Chiapas', m:'Venustiano Carranza', eSrc:ref('cfe23','239'),
+    mw:900, mwSrc:ref('cfe24','25'), gwh:{2022:2926.57,2023:1556.0,2024:1315.1}, g:[ref('cfe22','109'),ref('cfe23','83'),ref('cfe24','61')], lat:16.417, lon:-92.783 },
+  { id:'peni', n:'C.H. Ángel Albino Corzo (Peñitas)', t:'hid', e:'Chiapas', m:'Ostuacán', eSrc:ref('cfe23','239'),
+    mw:420, mwSrc:ref('cfe24','25'), gwh:{2022:1980.95,2023:1440.49,2024:1153.2}, g:[ref('cfe22','109'),ref('cfe23','83'),ref('cfe24','61')], lat:17.420, lon:-93.380 },
+  { id:'infi', n:'C.H. Infiernillo', t:'hid', e:'Michoacán', m:'Arteaga', eSrc:ref('cfe23','238'),
+    mw:1200, mwSrc:ref('cfe24','25'), gwh:{2022:3265.7,2023:1353.5,2024:2902.7}, g:[ref('cfe22','50'),ref('cfe23','32'),ref('cfe24','33')], lat:18.267, lon:-101.892 },
+  { id:'vill', n:'C.H. La Villita', t:'hid', e:'Michoacán', m:'Arteaga', eSrc:ref('cfe23','238'),
+    mw:320, mwSrc:ref('cfe24','25'), gwh:{2022:1496.23,2023:640.57,2024:1178.0}, g:[ref('cfe22','50'),ref('cfe23','32'),ref('cfe24','33')], lat:18.000, lon:-102.170 },
+  { id:'cara', n:'C.H. Ing. Carlos Ramírez Ulloa (El Caracol)', t:'hid', e:'Guerrero', m:'Heliodoro Castillo', eSrc:ref('cfe23','238'),
+    mw:600, mwSrc:ref('cfe24','25'), gwh:{2022:841.4,2023:613.84,2024:1143.0}, g:[ref('cfe22','50'),ref('cfe23','32'),ref('cfe24','33')], lat:17.930, lon:-99.970 },
+  { id:'zima', n:'C.H. Fernando Hiriart Balderrama (Zimapán)', t:'hid', e:'Hidalgo', m:'Zimapán', eSrc:ref('cfe23','239'),
+    mw:292, mwSrc:ref('cfe24','25'), gwh:{2022:1439.19,2023:816.49,2024:1379.2}, g:[ref('cfe22','50'),ref('cfe23','32'),ref('cfe24','33')], lat:20.650, lon:-99.460 },
+  { id:'novi', n:'C.H. Plutarco Elías Calles (El Novillo)', t:'hid', e:'Sonora', m:'El Novillo', eSrc:ref('cfe23','238'),
+    mw:null, gwh:{2022:465,2023:338,2024:192.8}, g:[ref('cfe22','71'),ref('cfe23','51'),ref('cfe24','42')], lat:28.970, lon:-109.630 },
+  { id:'maza', n:'C.H. Mazatepec', t:'hid', e:'Puebla', m:'Apulco', eSrc:ref('cfe23','238'),
+    mw:220, mwSrc:ref('cfe24','25'), gwh:{2022:516.06,2023:379.48,2024:493.9}, g:[ref('cfe22','109'),ref('cfe23','83'),ref('cfe24','61')], lat:19.930, lon:-97.620 },
+  { id:'cpri', n:'C.G. Cerro Prieto', t:'geo', e:'Baja California', m:'Mexicali', eSrc:'No documentado en los informes (ubicación de conocimiento general)',
+    mw:null, gwh:{2022:2202,2023:1929,2024:1801.3}, g:[ref('cfe22','71'),ref('cfe23','51'),ref('cfe24','42')], lat:32.402, lon:-115.230 },
+  { id:'azuf', n:'C.G. Los Azufres', t:'geo', e:'Michoacán', m:'Zinapécuaro / Ciudad Hidalgo', eSrc:'No documentado en los informes (ubicación de conocimiento general)',
+    mw:242, mwSrc:ref('cfe23','17 (capacidad bruta instalada)'), gwh:{2022:1632.33,2023:1581.85,2024:1393.2}, g:[ref('cfe22','57'),ref('cfe23','40'),ref('cfe24','38')], lat:19.800, lon:-100.650 },
+  { id:'hume', n:'C.G. Los Humeros', t:'geo', e:'Puebla', m:'Chignautla', eSrc:'No documentado en los informes (ubicación de conocimiento general)',
+    mw:null, gwh:{2022:425.79,2023:521.07,2024:349.7}, g:[ref('cfe22','109'),ref('cfe23','83'),ref('cfe24','61')], lat:19.680, lon:-97.450 },
+  { id:'pena', n:'C.FV. Puerto Peñasco (Rafael Galván Maldonado)', t:'fv', e:'Sonora', m:'Puerto Peñasco', eSrc:ref('cfe23','239'),
+    mw:120, mwSrc:ref('cfe23','17 y 240 (Sección I; la Sección II es de 300 MW, avance 68.35% al cierre de 2023)'), gwh:{2022:null,2023:267,2024:406.6}, g:['Dato no disponible',ref('cfe23','51'),ref('cfe24','42')], lat:31.440, lon:-113.520 },
+  { id:'lagu', n:'C.N. Laguna Verde', t:'nuc', e:'Veracruz', m:'Alto Lucero', eSrc:'No documentado en los informes (ubicación de conocimiento general)',
+    mw:1608, mwSrc:ref('cfe24','22 (capacidad nucleoeléctrica CFE; Laguna Verde es el único nucleoeléctrico, ver pp. 62-66)'),
+    gwh:{2022:10539,2023:12043,2024:11980}, g:[ref('cfe22','114 (energía neta)'),ref('cfe23','88 (energía neta)'),ref('cfe24','64 (energía neta 11.98 TWh)')], lat:19.721, lon:-96.407 },
+  /* Proyectos de ciclo combinado en construcción (no son centrales en operación; sin generación anual) */
+  { id:'tuxp', n:'CCC Tuxpan Fase I (en construcción)', t:'cc', e:'Veracruz', m:'Tuxpan', eSrc:ref('cfe23','239'),
+    mw:1056.6, mwSrc:ref('cfe24','286 (capacidad neta garantizada)'), gwh:{}, g:[], proyecto:true, avance:'Avance físico 84.8 % al 31/12/2024 (Informe 2024, p. 286)', lat:20.960, lon:-97.400 },
+  { id:'merd', n:'CCC Mérida (en construcción)', t:'cc', e:'Yucatán', m:'Mérida', eSrc:ref('cfe23','239'),
+    mw:499, mwSrc:ref('cfe24','286 (capacidad neta garantizada)'), gwh:{}, g:[], proyecto:true, avance:'Avance físico 94.3 % al 31/12/2024 (Informe 2024, p. 286)', lat:20.970, lon:-89.620 },
+  { id:'riv',  n:'CCC Riviera Maya (Valladolid) (en construcción)', t:'cc', e:'Yucatán', m:'Valladolid', eSrc:ref('cfe23','239'),
+    mw:1020, mwSrc:ref('cfe24','286 (capacidad neta garantizada)'), gwh:{}, proyecto:true, g:[], avance:'Avance físico 92.3 % al 31/12/2024 (Informe 2024, p. 286)', lat:20.690, lon:-88.200 }
+];
+const PTECH = {
+  hid:{n:'Hidroeléctrica',c:'#224C76'}, geo:{n:'Geotermoeléctrica',c:'#FDAD17'}, fv:{n:'Solar fotovoltaica',c:'#FEC520'},
+  nuc:{n:'Nucleoeléctrica',c:'#071F3C'}, cc:{n:'Ciclo combinado (proyecto)',c:'#79A928'}
+};
+
+/* ---------- Transmisión y distribución (CFE) ---------- */
+const TRANS = {
+  km:{2022:110449,2023:110558,2024:111138}, subs:{2022:2279,2023:2302,2024:2317},
+  mva:{2022:165541,2023:164992,2024:168981}, src:ref('cfe24','77 (Fuente: CFE Transmisión)'),
+  subsGE161:608, subsLE161:1709, srcSubs:ref('cfe24','78'),
+  imp:{2022:5166,2023:1975,2024:2167}, exp:{2022:2104,2023:2795,2024:2562}, srcIE:ref('cfe24','91 (RNT de 69 kV a 400 kV)'),
+  proyectosSener:250, srcPr:ref('cfe24','78')
+};
+const DIST = {
+  usuariosM:49.1, divisiones:16, zonas:150, srcU:ref('cfe24','96'),
+  kmMT:555336, kmBT:345966, kmSub:51567, srcKm:ref('cfe24','98'),
+  ssee:2157, trPot:3335, mvaPot:81284, trDist:1660977, mvaDist:60912, srcInf:ref('cfe24','98'),
+  perdTot:{2022:11.05,2023:10.86,2024:10.69}, perdMTBT:{2022:13.22,2023:12.88,2024:12.88}, srcP:ref('cfe24','97'),
+  saidi:{2022:19.248,2023:17.788,2024:16.708}, saifi:{2022:0.411,2023:0.391,2024:0.375}, srcS:ref('cfe24','97'),
+  electrificacion:{2019:98.95,2020:99.08,2021:99.21,2022:99.29,2023:99.43,2024:99.64}, srcE:ref('cfe24','15 y 97'),
+  // Nombres de las 16 divisiones (tablas "División Comercial", pp. 124-125)
+  divisionesNombres:['Baja California','Noroeste','Norte','Golfo Norte','Centro Occidente','Centro Sur','Oriente','Sureste','Valle de México Norte','Valle de México Centro','Valle de México Sur','Bajío','Golfo Centro','Centro Oriente','Peninsular','Jalisco'],
+  srcDiv:ref('cfe24','124-125')
+};
+const CFE_SHARE = { years:[2022,2023,2024], vals:[41.1,41.9,42.3], src:ref('cfe24','29') }; // % participación de CFE en generación (tal como lo publica el informe)
+const CFE_NETA = { 2022:137133.0, 2023:145172.1, 2024:148775.4 }; // GWh, Informe 2024 p. 29
+const CFE_LIMPIA_2023_TXT = { gwh:35824, pctNeta:24.7, privadosPct:19.7, src:ref('cfe23','19') };
+const HOGARES = [ // "Beneficios de los proyectos", Informe 2023 p. 238-239 (generación anual esperada y habitantes beneficiados)
+  {n:'C.H. Infiernillo',gwh:3285.7,hab:1.39},{n:'C.H. Malpaso',gwh:2804.9,hab:1.2},{n:'C.H. Angostura',gwh:2229.8,hab:1.0},
+  {n:'C.H. Zimapán',gwh:1661.8,hab:0.7},{n:'CCC Tuxpan Fase I',gwh:8793.6,hab:3.8}
+];
+
+/* ===================== Utilidades ===================== */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const nf = (v, d=0) => v==null || isNaN(v) ? 'Dato no disponible' : Number(v).toLocaleString('es-MX',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct = (a, b, d=1) => b ? nf(100*a/b, d) + ' %' : 'Dato no disponible';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sum = a => a.reduce((x,y)=>x+(y||0),0);
+const yoy = (a,b) => (a==null||b==null||!b) ? null : 100*(a-b)/b;
+
+/* Glosario: se muestra como tooltip. Las definiciones son conceptos técnicos generales; las cifras salen de los documentos. */
+const GLOSS = {
+ 'vapor convencional':'Central térmica en la que un combustible (combustóleo, gas o carbón) calienta agua en una caldera; el vapor mueve una turbina. Opera con el ciclo Rankine.',
+ 'ciclo rankine':'Ciclo termodinámico del vapor: la bomba presuriza agua líquida, la caldera la convierte en vapor, la turbina extrae trabajo y el condensador la regresa a líquido.',
+ 'ciclo combinado':'Combina una turbina de gas (ciclo Brayton) con una turbina de vapor (ciclo Rankine) que aprovecha el calor de escape. Por eso su eficiencia es mayor que la de ciclos simples.',
+ 'turbogás':'Turbina de gas de ciclo simple: el combustible se quema con aire comprimido y los gases calientes mueven la turbina directamente.',
+ 'combustión interna':'Motogeneradores (motores de combustión interna acoplados a un generador). Son modulares y se usan en sistemas pequeños o aislados.',
+ 'carboeléctrica':'Central de vapor cuyo combustible es carbón mineral pulverizado.',
+ 'nucleoeléctrica':'Central que usa la fisión de uranio como fuente de calor para producir vapor y mover una turbina.',
+ 'fisión':'División de núcleos pesados (uranio-235) que libera energía en forma de calor.',
+ 'energía limpia':'Definición legal (LIE 2014 art. 3 fr. XXII; Ley del Sector Eléctrico 2025 art. 3 fr. XXI): fuentes y procesos de generación cuyas emisiones o residuos no rebasan umbrales reglamentarios. La lista incluye viento, solar, geotermia, hidroeléctricas y nucleoeléctrica.',
+ 'renovable':'Recurso que se repone de forma natural en escalas humanas (sol, viento, agua en ciclo hidrológico, calor geotérmico, biomasa). Es un criterio físico, no un umbral de emisiones.',
+ 'sen':'Sistema Eléctrico Nacional: conjunto de infraestructura de generación, transmisión y distribución, y su operación.',
+ 'sin':'Sistema Interconectado Nacional: la red principal que enlaza la mayor parte del país.',
+ 'sibc':'Sistema Interconectado de Baja California.','sibcs':'Sistema Interconectado de Baja California Sur.',
+ 'mulegé':'Municipio de Baja California Sur; el informe CFE 2024 (p. 198) cita el Sistema Guerrero Negro, en Mulegé.',
+ 'cenace':'Centro Nacional de Control de Energía: ejerce el Control Operativo del SEN y opera el Mercado Eléctrico Mayorista (LIE 2014 art. 107).',
+ 'mem':'Mercado Eléctrico Mayorista, operado por el CENACE (LIE 2014 art. 3 fr. XXVII).',
+ 'rnt':'Red Nacional de Transmisión (69 kV a 400 kV según CFE Transmisión).',
+ 'rgd':'Redes Generales de Distribución (media y baja tensión).',
+ 'gwh':'Gigawatt-hora = 1,000,000 kWh. Mide energía.','mw':'Megawatt = 1,000 kW. Mide potencia.','mva':'Megavolt-ampere. Mide potencia aparente (tensión × corriente), usada para transformadores.',
+ 'kv':'Kilovolt = 1,000 V.',
+ 'factor de potencia':'cos φ: fracción de la potencia aparente que realiza trabajo útil. Con cos φ = 1 toda la corriente es útil.',
+ 'pérdidas joule':'Calor disipado en los conductores por su resistencia: P = 3·I²·R en un sistema trifásico equilibrado.',
+ 'saidi':'Duración media de interrupción por usuario (minutos).','saifi':'Frecuencia media de interrupción por usuario (interrupciones).',
+ 'generación bruta':'Energía producida en bornes del generador, antes de descontar el consumo propio de la central.',
+ 'generación neta':'Generación bruta menos los usos propios de la central.',
+ 'capacidad efectiva':'Potencia máxima que una central puede entregar de forma sostenida en condiciones normales.',
+ 'intermitente':'Recurso cuya producción depende del clima o la hora (sol, viento): no es despachable a voluntad.',
+ 'factor de planta':'Energía generada entre la que produciría a potencia máxima durante todo el periodo.',
+ 'transformador ideal':'Modelo sin pérdidas ni flujo de dispersión: Vp/Vs = Np/Ns y Vp·Ip = Vs·Is.',
+ 'pie':'Productor Independiente de Energía. En el informe CFE aparecen agrupados en la EPS CFE Generación V.',
+ 'eps':'Empresa Productiva Subsidiaria de CFE (por ejemplo CFE Generación I a VI).',
+ 'gd':'Generación Distribuida: pequeñas centrales (sobre todo fotovoltaicas) conectadas a la red de distribución.',
+ 'siacig':'Sistema Informático Auditable de Control Integrado de Gestión, fuente de datos de CFE.',
+ 'piirce':'Programa Indicativo para la Instalación y Retiro de Centrales Eléctricas (SENER). Es indicativo, no genera derechos.',
+ 'lie':'Ley de la Industria Eléctrica (DOF 11/08/2014).','lse':'Ley del Sector Eléctrico (DOF 18/03/2025).',
+ 'cre':'Comisión Reguladora de Energía.','sener':'Secretaría de Energía.',
+ 'estricta separación legal':'Obligación de que generación, transmisión, distribución y comercialización se realicen de forma independiente (LIE 2014 art. 8).',
+ 'margen de reserva':'Capacidad disponible por encima de la demanda máxima; mide la holgura del sistema (PRODESEN p. 62).'
+};
+/* [[término]] o [[término|texto]] → span con tooltip */
+function tx(s){ return String(s).replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g,(m,k,l)=>{
+  const key=k.toLowerCase(); const g=GLOSS[key]; if(!g) return l||k;
+  return `<span class="term" tabindex="0" role="button" data-gl="${esc(key)}">${l||k}</span>`; }); }
+
+/* Tooltip flotante accesible: hover, foco y clic/tap */
+(function(){
+  const tip=document.createElement('div'); tip.id='tip'; tip.setAttribute('role','tooltip'); document.body.appendChild(tip);
+  let cur=null;
+  const show=el=>{ const k=el.dataset.gl; tip.innerHTML='<b>'+esc(k.replace(/^./,c=>c.toUpperCase()))+'</b><br>'+esc(GLOSS[k]||''); tip.classList.add('on'); cur=el;
+    const r=el.getBoundingClientRect(); const w=Math.min(300,innerWidth-20); tip.style.maxWidth=w+'px';
+    let x=Math.min(Math.max(8,r.left),innerWidth-w-8), y=r.bottom+8; tip.style.left=x+'px'; tip.style.top=y+'px';
+    const th=tip.offsetHeight; if(y+th>innerHeight-8) tip.style.top=Math.max(8,r.top-th-8)+'px'; };
+  const hide=()=>{tip.classList.remove('on');cur=null};
+  document.addEventListener('mouseover',e=>{const t=e.target.closest('.term'); if(t) show(t);});
+  document.addEventListener('mouseout',e=>{if(e.target.closest('.term')) hide();});
+  document.addEventListener('focusin',e=>{const t=e.target.closest('.term'); if(t) show(t);});
+  document.addEventListener('focusout',e=>{if(e.target.closest('.term')) hide();});
+  document.addEventListener('click',e=>{const t=e.target.closest('.term'); if(t){ cur===t?hide():show(t);} else hide();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape') hide();});
+})();
+
+/* ===================== Gráficas SVG ===================== */
+const PAL = ['#224C76','#79A928','#FDAD17','#071F3C','#FEC520','#A7CC6B','#5F8CB8','#0B3D36'];
+function niceMax(v){ if(v<=0) return 1; const p=Math.pow(10,Math.floor(Math.log10(v))); const m=v/p; return (m<=1?1:m<=2?2:m<=2.5?2.5:m<=5?5:10)*p; }
+function axisY(max,H,pad,steps=4){ let s=''; for(let i=0;i<=steps;i++){ const y=pad.t+(H-pad.t-pad.b)*(1-i/steps); const val=max*i/steps;
+  s+=`<line class="gl" x1="${pad.l}" x2="${pad.w-pad.r}" y1="${y}" y2="${y}"/><text x="${pad.l-6}" y="${y+4}" text-anchor="end" font-size="11">${nf(val, max<10?1:0)}</text>`;} return s; }
+
+/* barras agrupadas / apiladas. series:[{name,color,values[]}] */
+function barsSVG({labels,series,unit='',stacked=false,h=300,fmt=v=>nf(v),showVals=false,negative=false}){
+  const w=640, pad={l:56,r:12,t:14,b:46,w};
+  const vals=series.flatMap(s=>s.values.filter(v=>v!=null));
+  let max=stacked? Math.max(...labels.map((_,i)=>sum(series.map(s=>s.values[i]||0)))) : Math.max(...vals,0);
+  let min=negative?Math.min(0,...vals):0; max=niceMax(max); if(negative&&min<0) min=-niceMax(-min);
+  const range=max-min, ih=h-pad.t-pad.b, y0=v=>pad.t+ih*(1-(v-min)/range);
+  let g=''; const steps=4;
+  for(let i=0;i<=steps;i++){const v=min+range*i/steps,y=y0(v);g+=`<line class="gl" x1="${pad.l}" x2="${w-pad.r}" y1="${y}" y2="${y}"/><text x="${pad.l-6}" y="${y+4}" text-anchor="end" font-size="11">${nf(v,range<10?1:0)}</text>`;}
+  const n=labels.length, bw=(w-pad.l-pad.r)/n, gw=bw*.78, k=series.length, sw=stacked?gw:gw/k;
+  labels.forEach((lb,i)=>{ const x0=pad.l+bw*i+(bw-gw)/2; let acc=0;
+    series.forEach((s,j)=>{ const v=s.values[i]; if(v==null){ if(!stacked) g+=`<text x="${x0+sw*j+sw/2}" y="${y0(0)-4}" text-anchor="middle" font-size="9" fill="#B3261E">N/D</text>`; return; }
+      const x=stacked?x0:x0+sw*j; const top=stacked?acc+v:v, base=stacked?acc:0;
+      const yT=y0(Math.max(top,base)), yB=y0(Math.min(top,base)); acc+=stacked?v:0;
+      g+=`<rect class="bar" x="${x}" y="${yT}" width="${sw-2}" height="${Math.max(0.5,yB-yT)}" rx="3" fill="${s.color||PAL[j%PAL.length]}"><title>${esc(s.name)} · ${esc(lb)}: ${fmt(v)} ${unit}</title></rect>`;
+      if(showVals&&!stacked&&sw>26) g+=`<text x="${x+(sw-2)/2}" y="${yT-3}" text-anchor="middle" font-size="9.5">${fmt(v)}</text>`; });
+    g+=`<text x="${pad.l+bw*i+bw/2}" y="${h-pad.b+16}" text-anchor="middle" font-size="11">${esc(lb.length>16? lb.slice(0,15)+'…':lb)}</text>`; });
+  g+=`<line class="ax" x1="${pad.l}" x2="${w-pad.r}" y1="${y0(0)}" y2="${y0(0)}" stroke-width="1.4"/>`;
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Gráfica de barras (${esc(unit)})">${g}<text x="12" y="${pad.t+ih/2}" font-size="11" transform="rotate(-90 12 ${pad.t+ih/2})" text-anchor="middle" fill="#4A6078">${esc(unit)}</text></svg>`+legend(series);
+}
+function legend(series){ if(series.length<2) return ''; return '<div class="legend">'+series.map((s,j)=>`<span><i style="background:${s.color||PAL[j%PAL.length]}"></i>${esc(s.name)}</span>`).join('')+'</div>'; }
+
+/* barras horizontales: items [{label,value,color,sub}] */
+function hbarsSVG({items,unit='',fmt=v=>nf(v),max}){
+  const w=640, rowH=26, pad={l:190,r:70,t:6,b:8}, h=pad.t+pad.b+items.length*rowH;
+  const m=max||niceMax(Math.max(...items.map(i=>i.value||0),1)); let g='';
+  items.forEach((it,i)=>{ const y=pad.t+i*rowH, bw=(w-pad.l-pad.r)*(it.value||0)/m;
+    g+=`<text x="${pad.l-8}" y="${y+16}" text-anchor="end" font-size="12">${esc(it.label.length>30?it.label.slice(0,29)+'…':it.label)}</text>`;
+    g+=it.value==null?`<text x="${pad.l+4}" y="${y+16}" font-size="11" fill="#B3261E">Dato no disponible</text>`:
+      `<rect class="bar" x="${pad.l}" y="${y+3}" width="${Math.max(1,bw)}" height="${rowH-8}" rx="3" fill="${it.color||PAL[0]}"><title>${esc(it.label)}: ${fmt(it.value)} ${unit}</title></rect><text x="${pad.l+bw+5}" y="${y+16}" font-size="11.5">${fmt(it.value)} ${esc(unit)}</text>`; });
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Barras horizontales (${esc(unit)})">${g}</svg>`;
+}
+
+/* dona: items [{label,value,color}] */
+function donutSVG({items,center='',sub='',unit='%',fmt=v=>nf(v,1)}){
+  const R=88,r=54,cx=110,cy=110,tot=sum(items.map(i=>i.value)); let a=-Math.PI/2,g='';
+  items.forEach(it=>{ if(!it.value) return; const f=it.value/tot, a2=a+f*2*Math.PI, big=f>.5?1:0;
+    const p=(ang,rad)=>[cx+rad*Math.cos(ang),cy+rad*Math.sin(ang)];
+    const [x1,y1]=p(a,R),[x2,y2]=p(a2-1e-4,R),[x3,y3]=p(a2-1e-4,r),[x4,y4]=p(a,r);
+    g+=`<path class="bar" d="M${x1},${y1} A${R},${R} 0 ${big} 1 ${x2},${y2} L${x3},${y3} A${r},${r} 0 ${big} 0 ${x4},${y4} Z" fill="${it.color}" stroke="#fff" stroke-width="1.5"><title>${esc(it.label)}: ${fmt(it.value)} ${unit}</title></path>`; a=a2; });
+  const lg='<div class="legend" style="flex-direction:column;gap:3px">'+items.filter(i=>i.value).map(i=>`<span><i style="background:${i.color}"></i>${esc(i.label)} <b>${fmt(i.value)} ${unit}</b></span>`).join('')+'</div>';
+  return `<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><svg viewBox="0 0 220 220" style="width:210px;max-width:100%" role="img" aria-label="Gráfica de dona">${g}<text x="110" y="${sub?106:114}" text-anchor="middle" font-size="19" font-weight="700" font-family="Poppins,sans-serif">${esc(center)}</text>${sub?`<text x="110" y="126" text-anchor="middle" font-size="10.5" fill="#4A6078">${esc(sub)}</text>`:''}</svg>${lg}</div>`;
+}
+
+/* líneas: xs[], series:[{name,color,ys[]}], mark:{x,y} */
+function lineSVG({xs,series,unit='',h=280,fmt=v=>nf(v,1),logY=false,marks=[],xLabel=''}){
+  const w=640,pad={l:56,r:16,t:14,b:42,w};
+  const all=series.flatMap(s=>s.ys.filter(v=>v!=null)); let max=niceMax(Math.max(...all)), min=Math.min(0,...all);
+  const ih=h-pad.t-pad.b, iw=w-pad.l-pad.r, X=i=>pad.l+iw*(xs.length>1?i/(xs.length-1):.5), Y=v=>pad.t+ih*(1-(v-min)/(max-min));
+  let g=''; for(let i=0;i<=4;i++){const v=min+(max-min)*i/4,y=Y(v);g+=`<line class="gl" x1="${pad.l}" x2="${w-pad.r}" y1="${y}" y2="${y}"/><text x="${pad.l-6}" y="${y+4}" text-anchor="end" font-size="11">${nf(v,max<10?1:0)}</text>`;}
+  xs.forEach((x,i)=>{g+=`<text x="${X(i)}" y="${h-pad.b+16}" text-anchor="middle" font-size="11">${esc(String(x))}</text>`;});
+  series.forEach((s,j)=>{ const c=s.color||PAL[j%PAL.length]; const pts=s.ys.map((v,i)=>v==null?null:[X(i),Y(v),v,i]).filter(Boolean);
+    g+=`<polyline fill="none" stroke="${c}" stroke-width="2.6" points="${pts.map(p=>p[0]+','+p[1]).join(' ')}"/>`;
+    pts.forEach(p=>{g+=`<circle class="pt" cx="${p[0]}" cy="${p[1]}" r="4.5" fill="${c}" stroke="#fff" stroke-width="1.5"><title>${esc(s.name)} · ${xs[p[3]]}: ${fmt(p[2])} ${unit}</title></circle>`;}); });
+  marks.forEach(m=>{g+=`<circle cx="${X(m.i)}" cy="${Y(m.y)}" r="7" fill="none" stroke="#FDAD17" stroke-width="3"/>`;});
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Gráfica de líneas (${esc(unit)})">${g}<text x="12" y="${pad.t+ih/2}" font-size="11" transform="rotate(-90 12 ${pad.t+ih/2})" text-anchor="middle" fill="#4A6078">${esc(unit)}</text>${xLabel?`<text x="${pad.l+iw/2}" y="${h-4}" font-size="11" text-anchor="middle" fill="#4A6078">${esc(xLabel)}</text>`:''}</svg>`+legend(series);
+}
+
+/* Tarjeta con título, insignia, contenido, fuente y tabla de datos */
+const BADGES={cfe:['Solo CFE','b-cfe'],nac:['Nacional · SEN','b-nac'],calc:['Cálculo propio','b-calc'],plan:['Planeación','b-plan'],legal:['Documento legal','b-legal'],nd:['Dato no disponible','b-nd']};
+function card({title,badges=[],body,src='',table=null,cls=''}){
+  const b=badges.map(k=>`<span class="badge ${BADGES[k][1]}">${BADGES[k][0]}</span>`).join('');
+  let t=''; if(table){ t=`<details class="data"><summary>Ver datos</summary><div class="scroll"><table class="t"><thead><tr>${table.head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${table.rows.map(r=>`<tr>${r.map(c=>`<td>${c==null?'Dato no disponible':esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>`; }
+  return `<article class="card ${cls}"><h4>${tx(title)}${b}</h4>${body}${t}${src?`<div class="src"><b>Fuente:</b> ${tx(src)}</div>`:''}</article>`;
+}
+const sec=(n,t,inner,lead='')=>`<div class="sec"><h3><span class="n">${n}</span>${tx(t)}</h3>${lead?`<p>${tx(lead)}</p>`:''}${inner}</div>`;
+const kpi=(v,u,l,nd=false)=>`<div class="kpi${nd?' nd':''}"><span class="v">${v}</span><span class="u">${tx(u)}</span><span class="l">${tx(l)}</span></div>`;
+const callout=(t,k='')=>`<div class="callout ${k}">${tx(t)}</div>`;
+const YEARS=[2022,2023,2024];
+const techByCat = c => TECH.filter(t=>t.cat===c);
+const genCat = (c,y) => sum(techByCat(c).map(t=>t.gwh[y]));
+
+/* ===================== MÓDULO 0: RECURSOS ENERGÉTICOS ===================== */
+const CLASIF = [
+ {id:'gn', l:'Gas natural', k:'Recurso', c:'fosil', why:'Combustible fósil: se formó durante millones de años y se agota al consumirse. Es el combustible de los ciclos combinados (el PRODESEN, p. 55, indica que hoy usan 100 % gas natural).'},
+ {id:'ca', l:'Carbón mineral', k:'Recurso', c:'fosil', why:'Combustible fósil sólido. Alimenta las carboeléctricas; el consumo de carbón de CFE pasó de 107,582 TJ a 128,665 TJ de 2023 a 2024 (Informe CFE 2024, p. 27).'},
+ {id:'co', l:'Combustóleo', k:'Recurso', c:'fosil', why:'Derivado pesado del petróleo, combustible fósil. Se quema en calderas de vapor convencional; en 2024 CFE redujo su consumo en 29,363 TJ (Informe CFE 2024, p. 27).'},
+ {id:'di', l:'Diésel', k:'Recurso', c:'fosil', why:'Derivado del petróleo. Se usa en motores de combustión interna y turbinas de gas; es un combustible fósil.'},
+ {id:'ur', l:'Uranio', k:'Recurso', c:'nuclear', why:'Recurso nuclear: su fisión libera calor. No es renovable (la reserva es finita), pero la ley lo incluye entre las Energías Limpias porque la fisión no emite CO₂ al operar (LIE 2014, art. 3 fr. XXII inciso i).'},
+ {id:'fi', l:'Fisión nuclear', k:'Proceso', c:'nuclear', why:'Proceso de conversión: los núcleos de uranio se dividen y liberan calor. Ese calor produce vapor que mueve una turbina.'},
+ {id:'so', l:'Radiación solar', k:'Recurso', c:'renov', why:'Recurso renovable: el Sol aporta energía de forma continua en escalas humanas.'},
+ {id:'vi', l:'Viento', k:'Recurso', c:'renov', why:'Recurso renovable: el movimiento del aire proviene del calentamiento solar de la atmósfera.'},
+ {id:'ag', l:'Agua en movimiento (energía hidráulica)', k:'Recurso', c:'renov', why:'Recurso renovable: el ciclo del agua lo repone. Su disponibilidad varía con la lluvia: la generación hidroeléctrica de CFE cayó de 34,110 a 19,568 GWh de 2022 a 2023 (Informe CFE 2023, p. 301).'},
+ {id:'ge', l:'Calor geotérmico', k:'Recurso', c:'renov', why:'Recurso renovable: calor del subsuelo que se aprovecha mediante vapor natural.'},
+ {id:'bi', l:'Biomasa y biogás', k:'Recurso', c:'renov', why:'Se considera renovable cuando la materia orgánica se repone y se gestiona de forma sostenible. La LIE los menciona como bioenergéticos (art. 3 fr. XXII).'},
+ {id:'cc', l:'Ciclo combinado', k:'Tecnología', c:'depende', why:'Es una tecnología de conversión, no un recurso. Hoy opera con gas natural, pero el PRODESEN (pp. 55-56) planea ciclos combinados con mezcla de 30 % hidrógeno. Su clasificación depende del combustible que use.'},
+ {id:'tg', l:'Turbogás', k:'Tecnología', c:'depende', why:'Turbina de gas de ciclo simple. Puede operar con gas natural o con diésel según su diseño, así que no se clasifica por sí sola.'},
+ {id:'vc', l:'Vapor convencional', k:'Tecnología', c:'depende', why:'La caldera puede quemar combustóleo, gas natural o carbón, según la central. El proceso de conversión es el mismo (ciclo Rankine).'},
+ {id:'ci', l:'Combustión interna', k:'Tecnología', c:'depende', why:'Motogeneradores que pueden usar diésel, combustóleo o gas. La tecnología no determina la clase del combustible.'},
+ {id:'cb', l:'Carboeléctrica', k:'Tecnología', c:'fosil', why:'Central diseñada para quemar carbón mineral, por lo que su energía primaria es fósil.'},
+ {id:'nu', l:'Nucleoeléctrica', k:'Tecnología', c:'nuclear', why:'Central que usa uranio como combustible. Laguna Verde generó 11,980 GWh netos en 2024 (Informe CFE 2024, p. 64).'},
+ {id:'fv', l:'Solar fotovoltaica', k:'Tecnología', c:'renov', why:'Convierte la radiación solar en electricidad directamente (efecto fotovoltaico), sin combustión ni turbina.'},
+ {id:'eo', l:'Eoloeléctrica', k:'Tecnología', c:'renov', why:'El viento mueve el rotor de un aerogenerador. Tecnología renovable.'},
+ {id:'hi', l:'Hidroeléctrica', k:'Tecnología', c:'renov', why:'Usa la energía potencial del agua almacenada. Tecnología renovable y, por ley, Energía Limpia.'},
+ {id:'gt', l:'Geotermoeléctrica', k:'Tecnología', c:'renov', why:'Usa el vapor del subsuelo para mover una turbina. Tecnología renovable.'}
+];
+const ZONAS = {fosil:'Recursos fósiles', nuclear:'Recursos nucleares', renov:'Recursos renovables', depende:'Depende del combustible (tecnología)'};
+
+const CONV = [
+ {id:'gas', t:'Gas natural → electricidad (ciclo combinado)', st:[
+   {k:'Recurso primario',n:'Gas natural',e:'Energía química',d:'El gas natural almacena energía química en los enlaces del metano.'},
+   {k:'Proceso',n:'Combustión',e:'Química → térmica',d:'El gas se quema con aire comprimido en la cámara de combustión y produce gases a alta temperatura y presión.'},
+   {k:'Tecnología',n:'Turbina de gas',e:'Térmica → mecánica',d:'Los gases calientes se expanden en la turbina de gas (ciclo Brayton) y la hacen girar.'},
+   {k:'Recuperación',n:'Caldera de calor residual + turbina de vapor',e:'Calor de escape → mecánica',d:'Los gases de escape aún están calientes: producen vapor en una caldera de recuperación que mueve una segunda turbina (ciclo Rankine). Eso es lo que hace "combinado" al ciclo.'},
+   {k:'Electricidad',n:'Generador síncrono',e:'Mecánica → eléctrica',d:'Cada turbina gira un generador. Por inducción electromagnética se produce corriente alterna.'}]},
+ {id:'car', t:'Carbón → electricidad (carboeléctrica)', st:[
+   {k:'Recurso primario',n:'Carbón mineral',e:'Energía química',d:'Combustible fósil sólido, pulverizado antes de quemarse.'},
+   {k:'Proceso',n:'Combustión en caldera',e:'Química → térmica',d:'La combustión calienta los tubos de la caldera por donde circula agua.'},
+   {k:'Fluido de trabajo',n:'Vapor a alta presión',e:'Térmica',d:'El agua se evapora y se sobrecalienta: es el fluido que transporta la energía (ciclo Rankine).'},
+   {k:'Tecnología',n:'Turbina de vapor',e:'Térmica → mecánica',d:'El vapor se expande en la turbina y la hace girar. Después se condensa y regresa a la caldera.'},
+   {k:'Electricidad',n:'Generador síncrono',e:'Mecánica → eléctrica',d:'El eje de la turbina acciona el generador.'}]},
+ {id:'ura', t:'Uranio → electricidad (nucleoeléctrica)', st:[
+   {k:'Recurso primario',n:'Uranio',e:'Energía nuclear',d:'El combustible nuclear es uranio; la energía está en el núcleo atómico.'},
+   {k:'Proceso',n:'Fisión nuclear',e:'Nuclear → térmica',d:'Los núcleos de uranio se dividen al absorber neutrones y liberan calor.'},
+   {k:'Fluido de trabajo',n:'Vapor',e:'Térmica',d:'El calor del reactor produce vapor de agua; no hay combustión.'},
+   {k:'Tecnología',n:'Turbina de vapor',e:'Térmica → mecánica',d:'El vapor mueve la turbina, igual que en una central de carbón.'},
+   {k:'Electricidad',n:'Generador síncrono',e:'Mecánica → eléctrica',d:'El generador produce corriente alterna. Laguna Verde aportó 11,980 GWh netos en 2024 (Informe CFE 2024, p. 64).'}]},
+ {id:'sol', t:'Radiación solar → electricidad (fotovoltaica)', st:[
+   {k:'Recurso primario',n:'Radiación solar',e:'Energía radiante',d:'Los fotones del Sol llegan a los paneles.'},
+   {k:'Proceso',n:'Efecto fotovoltaico',e:'Radiante → eléctrica',d:'En la unión p-n del semiconductor, los fotones liberan electrones y se crea una diferencia de potencial.'},
+   {k:'Tecnología',n:'Celda y panel solar',e:'Eléctrica (corriente continua)',d:'Las celdas producen corriente continua (CC). No hay turbina ni piezas en movimiento.'},
+   {k:'Acondicionamiento',n:'Inversor',e:'CC → CA',d:'El inversor convierte la corriente continua en corriente alterna a la frecuencia de la red.'},
+   {k:'Electricidad',n:'Entrega a la red',e:'Eléctrica (CA)',d:'La energía pasa por un transformador y se inyecta a la red. Solo hay generación con radiación.'}]},
+ {id:'vie', t:'Viento → electricidad (eoloeléctrica)', st:[
+   {k:'Recurso primario',n:'Viento',e:'Energía cinética del aire',d:'La masa de aire en movimiento tiene energía cinética.'},
+   {k:'Proceso',n:'Captura aerodinámica',e:'Cinética → mecánica',d:'Las aspas generan un par que hace girar el rotor. Por física, no se puede extraer toda la energía del viento (límite de Betz, ≈ 59 %).'},
+   {k:'Tecnología',n:'Aerogenerador',e:'Mecánica',d:'El rotor gira lentamente; una multiplicadora (o un diseño directo) ajusta la velocidad al generador.'},
+   {k:'Conversión',n:'Generador',e:'Mecánica → eléctrica',d:'Por inducción electromagnética se produce electricidad.'},
+   {k:'Electricidad',n:'Entrega a la red',e:'Eléctrica',d:'Se eleva la tensión en un transformador. La potencia depende de la velocidad del viento.'}]},
+ {id:'agu', t:'Agua → electricidad (hidroeléctrica)', st:[
+   {k:'Recurso primario',n:'Agua embalsada',e:'Energía potencial',d:'El agua a mayor altura almacena energía potencial gravitatoria.'},
+   {k:'Proceso',n:'Caída por tubería (conducción)',e:'Potencial → cinética',d:'Al caer por la tubería forzada, el agua gana velocidad y presión.'},
+   {k:'Tecnología',n:'Turbina hidráulica',e:'Cinética → mecánica',d:'El agua incide sobre los álabes de la turbina y la hace girar.'},
+   {k:'Conversión',n:'Generador',e:'Mecánica → eléctrica',d:'El eje acciona el generador síncrono.'},
+   {k:'Electricidad',n:'Entrega a la red',e:'Eléctrica',d:'La potencia depende del caudal y de la altura de caída. En 2023 la sequía redujo la generación hidroeléctrica de CFE (Informe CFE 2023, p. 19).'}]}
+];
+
+const COMP = [
+ {id:'gn',n:'Gas natural',cat:'Fósil',ren:'No renovable',fuel:'Gas natural (metano)',conv:'Combustión → turbina de gas (y de vapor en ciclo combinado)',disp:'Controlable (despachable)',emi:'Emite CO₂ al quemarse',tec:'Ciclo combinado',nac:55.1,col:'#0F3254'},
+ {id:'ca',n:'Carbón mineral',cat:'Fósil',ren:'No renovable',fuel:'Carbón',conv:'Combustión → vapor → turbina',disp:'Controlable (despachable)',emi:'Emite CO₂ al quemarse',tec:'Carboeléctrica',nac:4.2,col:'#0F3254'},
+ {id:'co',n:'Combustóleo / diésel',cat:'Fósil',ren:'No renovable',fuel:'Derivados del petróleo',conv:'Combustión → vapor o motor → generador',disp:'Controlable (despachable)',emi:'Emite CO₂ al quemarse',tec:'Termoeléctrica (vapor) + combustión interna',nac:6.6,col:'#0F3254',calc:'5.9 + 0.7'},
+ {id:'ur',n:'Uranio',cat:'Nuclear',ren:'No renovable (limpia por ley)',fuel:'Uranio',conv:'Fisión → calor → vapor → turbina',disp:'Controlable; opera como carga base',emi:'No emite CO₂ durante la operación; genera residuos radiactivos',tec:'Nucleoeléctrica',nac:3.1,col:'#FEC520'},
+ {id:'so',n:'Radiación solar',cat:'Renovable',ren:'Renovable',fuel:'No usa combustible',conv:'Efecto fotovoltaico (sin turbina)',disp:'Intermitente (depende del día y el clima)',emi:'No emite CO₂ durante la operación',tec:'Solar fotovoltaica',nac:6.0,col:'#79A928'},
+ {id:'vi',n:'Viento',cat:'Renovable',ren:'Renovable',fuel:'No usa combustible',conv:'Energía cinética → aerogenerador',disp:'Intermitente (depende del viento)',emi:'No emite CO₂ durante la operación',tec:'Eoloeléctrica',nac:6.0,col:'#79A928'},
+ {id:'ag',n:'Agua (hidráulica)',cat:'Renovable',ren:'Renovable',fuel:'No usa combustible',conv:'Energía potencial/cinética → turbina hidráulica',disp:'Controlable con embalse, pero depende de la lluvia',emi:'No emite CO₂ por combustión; las emisiones del embalse no están en los documentos',tec:'Hidroeléctrica',nac:10.4,col:'#79A928'},
+ {id:'ge',n:'Calor geotérmico',cat:'Renovable',ren:'Renovable',fuel:'Vapor del subsuelo',conv:'Vapor natural → turbina',disp:'Controlable (flujo estable)',emi:'Sin factor en los documentos cargados',tec:'Geotérmica',nac:1.3,col:'#79A928'},
+ {id:'bi',n:'Biomasa y biogás',cat:'Renovable',ren:'Renovable (si se gestiona de forma sostenible)',fuel:'Materia orgánica / biogás',conv:'Combustión → vapor o motor',disp:'Controlable (se puede almacenar el combustible)',emi:'Emite CO₂ al quemarse; su balance neto depende del ciclo de vida (sin factor en los documentos)',tec:'Bioenergía',nac:0.6,col:'#79A928'}
+];
+
+function renderM0(){
+  const flow=['Recurso energético primario','Fuente o combustible','Proceso de conversión','Tecnología de generación','Electricidad producida'];
+  const ejemplos=[['Gas natural','Gas natural','Combustión → expansión','Ciclo combinado','Electricidad'],['Radiación solar','No hay combustible','Efecto fotovoltaico','Solar fotovoltaica','Electricidad'],['Agua embalsada','No hay combustible','Caída y giro de turbina','Hidroeléctrica','Electricidad'],['Uranio','Uranio','Fisión → calor → vapor','Nucleoeléctrica','Electricidad']];
+  const A=`<div class="mod-head"><span class="num">0</span><div><h2>Recursos energéticos</h2><p>Del recurso primario a la electricidad que llega a tu casa: qué es cada cosa y cómo se clasifica.</p></div></div>
+  ${card({title:'Cinco conceptos que no deben confundirse',body:`<div class="scroll"><table class="t"><thead><tr>${flow.map(f=>`<th>${f}</th>`).join('')}</tr></thead><tbody>${ejemplos.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>${callout('Un combustible <b>no es</b> una tecnología: el [[ciclo combinado]] es una tecnología y el gas natural es un combustible. Una [[energía limpia]] <b>no es lo mismo</b> que una [[renovable|energía renovable]].','warn')}`})}`;
+
+  const B=sec(1,'Clasificación de recursos',`<div class="grid g3">
+   ${card({title:'🔥 Recursos fósiles',body:`<p><b>Recursos:</b> gas natural, carbón mineral, combustóleo, diésel y derivados.</p><p><b>Tecnologías:</b> [[ciclo combinado]], carboeléctrica, [[vapor convencional]], [[turbogás]] y [[combustión interna]].</p><p>Se agotan al consumirse y emiten CO₂ al quemarse.</p>${callout('Una tecnología puede usar distintos combustibles según su diseño: por eso la tecnología no determina la clase del recurso.','warn')}`})}
+   ${card({title:'⚛️ Recursos nucleares',body:`<p><b>Recurso:</b> uranio. <b>Proceso:</b> [[fisión]] nuclear.</p><p><b>Tecnología:</b> [[nucleoeléctrica]]. La fisión produce calor, el calor genera vapor y el vapor acciona una turbina conectada a un generador.</p><p>No es renovable, pero la ley la incluye entre las [[energía limpia|Energías Limpias]].</p>`})}
+   ${card({title:'🌱 Recursos renovables',body:`<p><b>Recursos:</b> radiación solar, viento, energía hidráulica, calor geotérmico, biomasa y biogás.</p><p><b>Tecnologías:</b> solar fotovoltaica, eoloeléctrica, hidroeléctrica, geotermoeléctrica y bioenergía.</p><p>Se reponen de forma natural; algunos dependen del clima ([[intermitente|intermitentes]]).</p>`})}
+  </div>
+  ${card({title:'¿Renovable o limpia?',body:`<div class="grid g2"><div><svg viewBox="0 0 360 230" class="chart" role="img" aria-label="Diagrama: energías limpias contienen a renovables y nuclear"><rect x="6" y="6" width="348" height="218" rx="18" fill="#EAF4FC" stroke="#224C76" stroke-width="2"/><text x="180" y="28" text-anchor="middle" font-size="13" font-weight="700">ENERGÍAS LIMPIAS (definición legal)</text><ellipse cx="120" cy="125" rx="104" ry="80" fill="#79A928" opacity=".85"/><text x="120" y="108" text-anchor="middle" font-size="12" font-weight="700" fill="#0B2300">RENOVABLES</text><text x="120" y="126" text-anchor="middle" font-size="11" fill="#0B2300">sol · viento · agua</text><text x="120" y="141" text-anchor="middle" font-size="11" fill="#0B2300">geotermia · biomasa</text><ellipse cx="278" cy="125" rx="62" ry="52" fill="#FEC520"/><text x="278" y="122" text-anchor="middle" font-size="12" font-weight="700" fill="#071F3C">NUCLEAR</text><text x="278" y="138" text-anchor="middle" font-size="10.5" fill="#071F3C">no renovable</text><text x="180" y="212" text-anchor="middle" font-size="10.5" fill="#4A6078">Fósiles: fuera del conjunto de Energías Limpias</text></svg></div>
+   <div><p><b>Renovable</b> es un criterio físico: el recurso se repone.</p><p><b>Limpia</b> es un criterio legal: la fuente cumple umbrales de emisiones. La lista de la LIE incluye viento, radiación solar, geotermia, hidroeléctricas y <b>energía nucleoeléctrica</b> (art. 3 fr. XXII, incisos a, b, d, h e i).</p><p>La Ley del Sector Eléctrico de 2025 conserva la lista, incluida la nucleoeléctrica (art. 3 fr. XXI, inciso i).</p></div></div>`,badges:['legal'],src:`${ref('lie14','45-46')}; ${ref('dec25','86')}`})}`);
+
+  const C=sec(2,'Clasificador interactivo',`<p>Toca una tarjeta y luego una zona, o arrástrala. Recibirás retroalimentación al instante. Las tecnologías que admiten varios combustibles van en «Depende del combustible».</p>
+   <div class="row" style="margin:8px 0"><span id="cl-score" class="pill" style="background:var(--navy)">Aciertos 0 / ${CLASIF.length} · Errores 0</span><button class="btn ghost" id="cl-reset">Reiniciar</button></div>
+   <div class="pool" id="cl-pool" aria-label="Tarjetas por clasificar"></div>
+   <div class="zones" id="cl-zones">${Object.keys(ZONAS).map(k=>`<button class="zone z-${k}" data-z="${k}" aria-label="Zona ${ZONAS[k]}"><h4>${ZONAS[k]}</h4><div class="drop"></div></button>`).join('')}</div>
+   <div class="callout fb" id="cl-fb" role="status" aria-live="polite">Selecciona una tarjeta para empezar.</div>`);
+
+  const D=sec(3,'Diagramas de conversión de energía',`<div class="chips" id="cv-tabs" role="tablist">${CONV.map((c,i)=>`<button class="chip" role="tab" aria-pressed="${i===0}" data-i="${i}">${c.t.split(' (')[0]}</button>`).join('')}</div>
+   <div id="cv-body"></div>`,'Elige una cadena y selecciona cada etapa para ver qué forma de energía interviene.');
+
+  const E=sec(4,'Matriz energética por recurso',`<div class="grid g2">
+    ${card({title:'Generación nacional por tecnología, 2022',badges:['nac'],body:`<p>Total SEN 2022: <b>${nf(NAC.gen2022Gwh)} GWh</b>. Energías limpias: <b>${NAC.limpiasPct2022} %</b>; fósiles: <b>${NAC.fosilPct2022} %</b>.</p>${donutSVG({items:NAC.mix2022.map(m=>({label:m.n,value:m.v,color:m.c==='fosil'?'#0F3254':m.c==='nuclear'?'#FEC520':m.c==='renov'?'#79A928':'#A7CC6B'})),center:nf(NAC.gen2022Gwh),sub:'GWh · 2022'})}<div class="callout">Los porcentajes están tal como los publica el PRODESEN; suman 100.1 % por redondeo y «cogeneración eficiente» y «otros limpios» cuentan como limpias sin ser renovables ni nucleares.</div>`,
+      src:ref('prod','59 (Figura 4.9, datos de CENACE, CRE y CFE)'),table:{head:['Tecnología','% 2022','GWh (cálculo propio)'],rows:NAC.mix2022.map(m=>[m.n,m.v,nf(m.v*NAC.gen2022Gwh/100)])}})}
+    ${card({title:'Evolución de las energías limpias, 2018-2022',badges:['nac'],body:barsSVG({labels:NAC.limpiasSerie.years.map(String),series:[{name:'% energías limpias',color:'#79A928',values:NAC.limpiasSerie.vals}],unit:'% de la generación',showVals:true,fmt:v=>nf(v,1),h:260})+`<p>De 2018 a 2022 subió <b>${nf(NAC.limpiasSerie.vals[4]-NAC.limpiasSerie.vals[0],1)} puntos porcentuales</b> (cálculo propio).</p>`,src:ref('prod','60 (Figura 4.10)'),table:{head:['Año','% limpias'],rows:NAC.limpiasSerie.years.map((y,i)=>[y,NAC.limpiasSerie.vals[i]])}})}
+    ${card({title:'CFE: generación bruta por categoría, 2022-2024',badges:['cfe','calc'],body:barsSVG({labels:YEARS.map(String),stacked:true,unit:'GWh',series:['fosil','nuclear','renov'].map(c=>({name:CAT[c].name,color:CAT[c].color,values:YEARS.map(y=>genCat(c,y))})),h:300})+`<p>Fósil: ${YEARS.map(y=>pct(genCat('fosil',y),TECH_TOTAL[y])).join(' · ')}. Nuclear: ${YEARS.map(y=>pct(genCat('nuclear',y),TECH_TOTAL[y])).join(' · ')}. Renovable: ${YEARS.map(y=>pct(genCat('renov',y),TECH_TOTAL[y])).join(' · ')} (2022 · 2023 · 2024).</p>`,
+      src:TECH_SRC.gwh,table:{head:['Año','Fósil GWh','Nuclear GWh','Renovable GWh','Total CFE GWh'],rows:YEARS.map(y=>[y,nf(genCat('fosil',y)),nf(genCat('nuclear',y)),nf(genCat('renov',y)),nf(TECH_TOTAL[y])])}})}
+    ${card({title:'CFE: tecnologías con mayor generación',badges:['cfe'],body:`<label class="f" for="mx-y">Año</label><select id="mx-y">${YEARS.map(y=>`<option ${y===2024?'selected':''}>${y}</option>`).join('')}</select><div id="mx-h"></div>`,src:TECH_SRC.gwh})}
+  </div>
+  ${callout('<b>Nacional ≠ CFE.</b> El PRODESEN describe todo el SEN (año 2022). Los informes CFE describen solo la generación de CFE. El informe 2024 (p. 29) indica que CFE tuvo 41.1 % (2022), 41.9 % (2023) y 42.3 % (2024) de la generación del país. Esos porcentajes no se pueden verificar con los documentos cargados porque no incluyen el total nacional de 2023 y 2024: <b>Dato no disponible</b>.','warn')}`);
+
+  const F=sec(5,'Comparador energético',`<p>Selecciona dos o más recursos.</p><div class="chips" id="cp-chips">${COMP.map(c=>`<button class="chip" data-id="${c.id}" aria-pressed="${['gn','so'].includes(c.id)}">${c.n}</button>`).join('')}</div><div id="cp-out"></div>`,
+    'Las emisiones se describen de forma cualitativa: los documentos cargados no traen factores de emisión, así que no se inventan valores.');
+
+  const kp=[
+    ['68.8 %','Generación fósil nacional, 2022','Dependencia de combustibles fósiles',ref('prod','59'),'nac'],
+    [nf(10.4+6.0+6.0+1.3+0.6,1)+' %','Renovables nacionales, 2022','Hidráulica 10.4 + eólica 6.0 + solar 6.0 + geotérmica 1.3 + bioenergía 0.6 (suma propia)',ref('prod','59'),'calc'],
+    ['3.1 %','Nuclear nacional, 2022','Una sola central aporta esta fracción (Laguna Verde, CFE)',ref('prod','59'),'nac'],
+    ['+'+nf(NAC.limpiasSerie.vals[4]-NAC.limpiasSerie.vals[0],1)+' pp','Energías limpias 2018→2022','Evolución de la matriz hacia tecnologías limpias',ref('prod','60'),'calc'],
+    ['−'+nf(100*(1-19568/34110),1)+' %','Hidroeléctrica CFE, 2022→2023','Costo de depender de la lluvia (generación bruta)',ref('cfe23','301'),'calc'],
+    [nf(100*TECH.find(t=>t.id==='fv').gwh[2024]/TECH.find(t=>t.id==='fv').gwh[2023]-100,0)+' %','Crecimiento solar CFE, 2023→2024','274 → 555 GWh',ref('cfe24','27'),'cfe'],
+    [pct(genCat('fosil',2024),TECH_TOTAL[2024]),'Fósil en la generación CFE, 2024','Implica emisiones directas por combustión; renovable: '+pct(genCat('renov',2024),TECH_TOTAL[2024]),ref('cfe24','27'),'calc']
+  ];
+  const G=sec(6,'Indicadores de conciencia energética',`<div class="grid g4">${kp.map(k=>card({title:k[1],badges:[k[4]],body:kpi(k[0],'',k[2]),src:k[3]})).join('')}</div>`);
+  const H=sec(7,'Actividad de reflexión',`<div id="rf"></div>`,'Cinco preguntas que requieren interpretar gráficas y comparar recursos.');
+  return A+B+C+D+E+F+G+H;
+}
+
+function initM0(){
+  /* clasificador */
+  const pool=$('#cl-pool'); let sel=null, ok=0, bad=0, done=new Set();
+  const state=()=>$('#cl-score').textContent=`Aciertos ${ok} / ${CLASIF.length} · Errores ${bad}`;
+  const mk=c=>{ const b=document.createElement('button'); b.className='card-item'; b.draggable=true; b.dataset.id=c.id; b.type='button';
+    b.innerHTML=`${esc(c.l)}<small>${c.k}</small>`; b.setAttribute('aria-pressed','false'); return b; };
+  function reset(){ pool.innerHTML=''; $$('.zone .drop').forEach(d=>d.innerHTML=''); ok=bad=0; done.clear(); sel=null;
+    [...CLASIF].sort(()=>Math.random()-.5).forEach(c=>pool.appendChild(mk(c))); state(); $('#cl-fb').innerHTML='Selecciona una tarjeta para empezar.'; }
+  function place(id,z){ const c=CLASIF.find(x=>x.id===id); const el=$(`.card-item[data-id="${id}"]`); if(!c||!el||done.has(id)) return;
+    const fb=$('#cl-fb');
+    if(c.c===z){ ok++; done.add(id); el.classList.remove('sel','bad'); el.classList.add('ok'); el.draggable=false; $(`.zone[data-z="${z}"] .drop`).appendChild(el);
+      fb.className='callout ok fb'; fb.innerHTML=`<b>✔ Correcto: ${esc(c.l)}.</b> ${tx(esc(c.why))}`;
+    } else { bad++; el.classList.remove('sel'); el.classList.add('bad'); setTimeout(()=>el.classList.remove('bad'),500);
+      fb.className='callout bad fb'; fb.innerHTML=`<b>✘ ${esc(c.l)} no va en «${ZONAS[z]}».</b> Va en «${ZONAS[c.c]}». ${esc(c.why)}`; }
+    sel=null; $$('.card-item.sel').forEach(e=>e.classList.remove('sel')); state(); if(ok===CLASIF.length){ fb.className='callout ok fb'; fb.innerHTML+=`<br><b>¡Completado!</b> ${ok} aciertos y ${bad} errores.`; } }
+  pool.addEventListener('click',e=>{ const b=e.target.closest('.card-item'); if(!b) return; sel=b.dataset.id; $$('.card-item.sel').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+    const c=CLASIF.find(x=>x.id===sel); $('#cl-fb').className='callout fb'; $('#cl-fb').textContent=`Seleccionaste «${c.l}» (${c.k}). Ahora elige la zona donde va.`; });
+  $('#cl-zones').addEventListener('click',e=>{ const z=e.target.closest('.zone'); if(z&&sel) place(sel,z.dataset.z); });
+  document.addEventListener('dragstart',e=>{ const b=e.target.closest&&e.target.closest('.card-item'); if(b){ e.dataTransfer.setData('text/plain',b.dataset.id); sel=b.dataset.id; } });
+  $$('.zone').forEach(z=>{ z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('over');}); z.addEventListener('dragleave',()=>z.classList.remove('over'));
+    z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('over');place(e.dataTransfer.getData('text/plain'),z.dataset.z);}); });
+  $('#cl-reset').onclick=reset; reset();
+
+  /* conversión */
+  let cvI=0, cvS=0;
+  function cv(){ const c=CONV[cvI]; $$('#cv-tabs .chip').forEach((b,i)=>b.setAttribute('aria-pressed',i===cvI));
+    $('#cv-body').innerHTML=`<h4>${c.t}</h4><div class="flow">${c.st.map((s,i)=>`<button class="stage" data-s="${i}" aria-pressed="${i===cvS}"><span class="k">${s.k}</span><b>${s.n}</b></button>`).join('')}</div>
+      <div class="callout" role="status" aria-live="polite"><b>${esc(c.st[cvS].n)}</b> · <span class="mono">${esc(c.st[cvS].e)}</span><br>${tx(esc(c.st[cvS].d))}</div>
+      ${/Gas|Carbón|Uranio/.test(c.t)?`<p class="src">Nota: en las centrales térmicas solo una parte de la energía del combustible se convierte en electricidad. La eficiencia térmica neta de las centrales de CFE fue 34.5 % en 2024 (${ref('cfe24','29')}).</p>`:''}`;
+    $$('#cv-body .stage').forEach(b=>b.onclick=()=>{cvS=+b.dataset.s;cv();}); }
+  $('#cv-tabs').addEventListener('click',e=>{const b=e.target.closest('.chip'); if(!b) return; cvI=+b.dataset.i; cvS=0; cv();}); cv();
+
+  /* matriz: tecnologías CFE */
+  const mxh=()=>{ const y=+$('#mx-y').value; const it=TECH.filter(t=>t.gwh[y]!=null).sort((a,b)=>b.gwh[y]-a.gwh[y]).map(t=>({label:t.name,value:t.gwh[y],color:CAT[t.cat].color}));
+    $('#mx-h').innerHTML=hbarsSVG({items:it,unit:'GWh'})+`<div class="legend">${Object.values(CAT).map(c=>`<span><i style="background:${c.color}"></i>${c.name}</span>`).join('')}</div><p>Total CFE ${y}: <b>${nf(TECH_TOTAL[y])} GWh</b>.</p>`; };
+  $('#mx-y').onchange=mxh; mxh();
+
+  /* comparador */
+  const cp=()=>{ const ids=$$('#cp-chips .chip[aria-pressed="true"]').map(b=>b.dataset.id); const L=COMP.filter(c=>ids.includes(c.id));
+    if(L.length<2){ $('#cp-out').innerHTML=callout('Selecciona al menos dos recursos.','warn'); return; }
+    const rows=[['Categoría','cat'],['Renovabilidad','ren'],['Fuente o combustible','fuel'],['Proceso de conversión','conv'],['Disponibilidad','disp'],['Emisiones directas en operación','emi'],['Tecnología asociada','tec']];
+    $('#cp-out').innerHTML=`<div class="scroll"><table class="t"><thead><tr><th></th>${L.map(c=>`<th>${c.n}</th>`).join('')}</tr></thead><tbody>
+      ${rows.map(r=>`<tr><th>${r[0]}</th>${L.map(c=>`<td>${esc(c[r[1]])}</td>`).join('')}</tr>`).join('')}
+      <tr><th>Emisiones de ciclo de vida (gCO₂e/kWh)</th>${L.map(()=>`<td><span class="badge b-nd">Dato no disponible</span><br><small>Requiere fuente documentada (p. ej. IPCC AR5, WG III, Anexo III)</small></td>`).join('')}</tr></tbody></table></div>
+      <h4 style="margin-top:12px">Participación en la generación nacional 2022 (tecnología asociada)</h4>${hbarsSVG({items:L.map(c=>({label:c.n+' · '+c.tec,value:c.nac,color:c.col})),unit:'%',fmt:v=>nf(v,1),max:60})}
+      <p class="src">Fuente: ${ref('prod','59')}. «Combustóleo / diésel» suma termoeléctrica 5.9 % + combustión interna 0.7 % (suma propia). Las emisiones <b>directas</b> ocurren en la chimenea; las de <b>ciclo de vida</b> incluyen fabricación, extracción y desmantelamiento.</p>`; };
+  $('#cp-chips').addEventListener('click',e=>{const b=e.target.closest('.chip'); if(!b) return; b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true'); cp();}); cp();
+
+  /* reflexión */
+  const hid=TECH.find(t=>t.id==='hid'), cc=TECH.find(t=>t.id==='cc'), vap=TECH.find(t=>t.id==='vap'), nuc=TECH.find(t=>t.id==='nuc');
+  const hrsCC=cc.gwh[2024]*1000/cc.mw[2024], hrsV=vap.gwh[2024]*1000/vap.mw[2024];
+  const nucFC=100*nuc.gwh[2024]/(nuc.mw[2024]*8.784);
+  const Q=[
+   {q:'La gráfica muestra el porcentaje de energías limpias en la generación nacional. ¿Cuántos puntos porcentuales aumentó entre 2018 y 2022?',ch:barsSVG({labels:NAC.limpiasSerie.years.map(String),series:[{name:'%',color:'#79A928',values:NAC.limpiasSerie.vals}],unit:'%',showVals:true,fmt:v=>nf(v,1),h:200}),
+    o:['Cerca de 3 puntos','Cerca de 8.7 puntos','Cerca de 20 puntos'],a:1,f:'31.2 − 22.5 = 8.7 puntos porcentuales (PRODESEN, p. 60). Ojo: «puntos porcentuales» no es lo mismo que «por ciento»: el aumento relativo es 38.7 %.'},
+   {q:'Entre 2022 y 2023 la generación hidroeléctrica de CFE bajó mientras la nuclear casi no cambió. ¿Qué explica mejor la diferencia?',ch:barsSVG({labels:['2022','2023','2024'],series:[{name:'Hidroeléctrica',color:'#79A928',values:YEARS.map(y=>hid.gwh[y])},{name:'Nuclear',color:'#FEC520',values:YEARS.map(y=>nuc.gwh[y])}],unit:'GWh',h:220}),
+    o:['La hidroeléctrica depende de la lluvia; la nuclear no depende del clima','La nuclear es renovable y la hidroeléctrica no','Se retiraron presas en 2023'],a:0,f:'El Informe CFE 2023 (p. 19) atribuye la caída al estiaje. La nuclear opera como carga base y depende del combustible y su mantenimiento, no del clima.'},
+   {q:`En 2024 CFE generó con ciclo combinado ${nf(cc.gwh[2024])} GWh con ${nf(cc.mw[2024],1)} MW, y con vapor convencional ${nf(vap.gwh[2024])} GWh con ${nf(vap.mw[2024],1)} MW. ¿Qué tecnología aprovechó más su capacidad?`,ch:hbarsSVG({items:[{label:'Ciclo combinado (h equivalentes)',value:hrsCC,color:'#0F3254'},{label:'Vapor convencional (h equivalentes)',value:hrsV,color:'#224C76'}],unit:'h',fmt:v=>nf(v,0),max:8784}),
+    o:['Ciclo combinado: ≈ '+nf(hrsCC)+' h a plena potencia equivalentes','Vapor convencional: ≈ '+nf(hrsV)+' h','Son iguales'],a:0,f:`GWh ÷ MW = horas equivalentes a plena carga. Ciclo combinado ≈ ${nf(hrsCC)} h (${nf(100*hrsCC/8784,0)} % de 8,784 h del año bisiesto) frente a ≈ ${nf(hrsV)} h del vapor (${nf(100*hrsV/8784,0)} %). Cálculo propio con ${ref('cfe24','22 y 27')}.`},
+   {q:`La nucleoeléctrica tiene 1,608 MW (3.6 % de los 45,117 MW de CFE) pero aportó 8.0 % de su generación en 2024. ¿Qué indica?`,ch:barsSVG({labels:['Capacidad','Generación'],series:[{name:'Nuclear, % de CFE',color:'#FEC520',values:[100*1608/45116.7,100*12307/154059]}],unit:'%',showVals:true,fmt:v=>nf(v,1),h:200}),
+    o:['Que opera muchas horas al año (carga base): factor de capacidad alto ≈ '+nf(nucFC,0)+' %','Que es renovable','Que es la tecnología más barata'],a:0,f:`12,307 GWh ÷ (1,608 MW × 8,784 h) ≈ ${nf(nucFC,0)} %: casi no se detiene. La generación bruta de CFE tuvo un factor de planta de 38.5 % (Informe 2024, p. 29). Cálculo propio.`},
+   {q:'¿Es correcto decir que la energía nuclear es renovable y por eso limpia?',ch:`<div class="callout">LIE 2014, art. 3 fr. XXII, inciso i: «La energía nucleoeléctrica» figura entre las Energías Limpias. El uranio es un recurso finito.</div>`,
+    o:['Sí, las dos cosas','No es renovable (recurso finito), pero la ley la clasifica como limpia','Ni renovable ni limpia'],a:1,f:'«Renovable» describe el recurso (se repone). «Limpia» es una definición legal basada en emisiones y residuos. Por eso son conjuntos distintos: la nuclear está en el segundo, no en el primero.'}
+  ];
+  $('#rf').innerHTML=Q.map((q,i)=>`<div class="card" style="margin-bottom:12px"><h4>${i+1}. ${tx(q.q)}</h4>${q.ch}<div class="chips" data-q="${i}">${q.o.map((o,j)=>`<button class="chip" data-j="${j}">${esc(o)}</button>`).join('')}</div><div class="callout" id="rf-fb${i}" role="status" aria-live="polite" hidden></div></div>`).join('');
+  $('#rf').addEventListener('click',e=>{ const b=e.target.closest('.chip'); if(!b) return; const i=+b.parentNode.dataset.q, j=+b.dataset.j, q=Q[i], fb=$('#rf-fb'+i);
+    $$('.chip',b.parentNode).forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); fb.hidden=false; fb.className='callout '+(j===q.a?'ok':'bad'); fb.innerHTML=(j===q.a?'<b>✔ Correcto.</b> ':'<b>✘ No exactamente.</b> ')+tx(q.f); });
+}
+
+/* ===================== MÓDULO 1: GENERACIÓN ELÉCTRICA ===================== */
+let leafletP=null;
+function ensureLeaflet(){
+  if(window.L) return Promise.resolve(true);
+  if(leafletP) return leafletP;
+  leafletP=new Promise(res=>{
+    const css=document.createElement('link'); css.rel='stylesheet'; css.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css'; document.head.appendChild(css);
+    const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+    const t=setTimeout(()=>res(false),5000); s.onload=()=>{clearTimeout(t);res(!!window.L)}; s.onerror=()=>{clearTimeout(t);res(false)}; document.head.appendChild(s);
+  }); return leafletP;
+}
+const GF={year:2024,techs:new Set(Object.keys(PTECH)),estado:'',sel:null};
+
+function renderM1(){
+  const estados=[...new Set(PLANTS.map(p=>p.e))].sort();
+  const head=`<div class="mod-head"><span class="num">1</span><div><h2>Generación eléctrica</h2><p>Centrales documentadas en los informes de CFE: ubicación, tecnología, capacidad y energía generada en 2022, 2023 y 2024.</p></div></div>`;
+  const filters=`<div class="card"><div class="row">
+    <div><label class="f" for="g-y">Año</label><select id="g-y">${YEARS.map(y=>`<option ${y===GF.year?'selected':''}>${y}</option>`).join('')}</select></div>
+    <div><label class="f" for="g-e">Entidad federativa</label><select id="g-e"><option value="">Todas (${estados.length})</option>${estados.map(e=>`<option>${e}</option>`).join('')}</select></div>
+    <div style="flex:1;min-width:260px"><label class="f">Tecnología</label><div class="chips" id="g-t">${Object.entries(PTECH).map(([k,v])=>`<button class="chip" data-t="${k}" aria-pressed="true">${v.n}</button>`).join('')}</div></div></div></div>`;
+  const map=`<div class="grid g2" style="margin-top:14px"><div><div id="gmap" class="map" aria-label="Mapa de centrales"></div><p class="src" id="gmap-note"></p></div><div id="pl-detail"></div></div>
+   ${callout('<b>Alcance del mapa:</b> contiene '+PLANTS.filter(p=>!p.proyecto).length+' centrales en operación y '+PLANTS.filter(p=>p.proyecto).length+' proyectos de ciclo combinado, en '+new Set(PLANTS.map(p=>p.e)).size+' entidades y '+Object.keys(PTECH).length+' tecnologías. Los informes CFE sí documentan nombre, entidad o municipio, capacidad y generación, pero <b>no traen coordenadas</b>: las que se muestran son aproximadas y deben validarse con una fuente oficial. No hay centrales fósiles en operación porque sus generaciones por central no aparecen en las tablas revisadas.','warn')}
+   <div class="scroll"><table class="t" id="pl-table"></table></div>`;
+  const charts=`<div id="g-charts" class="grid g2" style="margin-top:14px"></div>`;
+  return head+filters+sec(1,'Mapa de centrales eléctricas',map)+sec(2,'Indicadores y gráficas de generación',charts,'Filtra por año; las gráficas con datos de CFE están identificadas. Pasa el cursor sobre las barras para ver el valor.');
+}
+
+function gfPlants(){ return PLANTS.filter(p=>GF.techs.has(p.t)&&(!GF.estado||p.e===GF.estado)); }
+
+function gfDetail(){ const el=$('#pl-detail'); const p=PLANTS.find(x=>x.id===GF.sel);
+  if(!p){ el.innerHTML=card({title:'Selecciona una central',body:'<p>Toca un marcador del mapa o una fila de la tabla para ver su ficha técnica y su generación 2022-2024.</p>'}); return; }
+  const v=YEARS.map(y=>p.gwh[y]); const varr=[yoy(v[1],v[0]),yoy(v[2],v[1])];
+  el.innerHTML=card({title:p.n,badges:['cfe'],cls:'',body:`<div class="grid" style="grid-template-columns:1fr 1fr;gap:8px">
+    ${kpi(p.mw!=null?nf(p.mw,p.mw%1?1:0):'—','MW',p.mw!=null?'Capacidad':'Capacidad: Dato no disponible',p.mw==null)}
+    ${kpi(PTECH[p.t].n,'', 'Tecnología')}</div>
+    <p><b>Ubicación:</b> ${esc(p.m)}, ${esc(p.e)}<br><small>${esc(p.eSrc)}</small></p>
+    ${p.proyecto?`<div class="callout warn">Proyecto en construcción, no tiene generación anual aún. ${esc(p.avance)}</div>`:
+    barsSVG({labels:YEARS.map(String),series:[{name:'Generación neta',color:PTECH[p.t].c,values:v}],unit:'GWh',showVals:true,fmt:v=>nf(v,0),h:210})+
+    `<p>Variación: 2022→2023 <b>${varr[0]==null?'Dato no disponible':nf(varr[0],1)+' %'}</b> · 2023→2024 <b>${varr[1]==null?'Dato no disponible':nf(varr[1],1)+' %'}</b></p>`}
+    <p class="src"><b>Coordenadas:</b> ${p.lat}, ${p.lon} · ${COORD_NOTE}</p>`,
+    src:[p.mwSrc?'Capacidad: '+p.mwSrc:'Capacidad: Dato no disponible en los informes',...(p.g||[]).map((s,i)=>'Generación '+YEARS[i]+': '+s)].join(' · ')}); }
+
+function gfTable(){ const L=gfPlants(), y=GF.year;
+  $('#pl-table').innerHTML=`<thead><tr><th>Central</th><th>Entidad</th><th>Tecnología</th><th>MW</th><th>GWh ${y}</th></tr></thead><tbody>${L.map(p=>`<tr data-id="${p.id}" style="cursor:pointer"><td><a href="#" data-id="${p.id}">${esc(p.n)}</a></td><td>${p.e}</td><td>${PTECH[p.t].n}</td><td>${p.mw!=null?nf(p.mw,p.mw%1?1:0):'Dato no disponible'}</td><td>${p.proyecto?'En construcción':nf(p.gwh[y],1)}</td></tr>`).join('')||'<tr><td colspan="5">Sin centrales con estos filtros.</td></tr>'}</tbody>`; }
+
+function gfCharts(){ const y=GF.year, py=y-1, ts=TECH.filter(t=>t.gwh[2024]!=null&&Object.keys(t.gwh).length);
+  const c1=card({title:'Generación bruta de CFE por tecnología',badges:['cfe'],body:barsSVG({labels:ts.map(t=>t.name),series:YEARS.map((yy,i)=>({name:String(yy),color:['#A7CC6B','#5F8CB8','#071F3C'][i],values:ts.map(t=>t.gwh[yy])})),unit:'GWh',h:320}),src:TECH_SRC.gwh,
+    table:{head:['Tecnología',...YEARS.map(String)],rows:ts.map(t=>[t.name,...YEARS.map(yy=>t.gwh[yy]==null?null:nf(t.gwh[yy]))])}});
+  const tot=TECH_TOTAL[y];
+  const c2=card({title:`Participación por tecnología en la generación de CFE, ${y}`,badges:['cfe','calc'],body:donutSVG({items:ts.map(t=>({label:t.name,value:100*t.gwh[y]/tot,color:{fosil:['#0F3254','#224C76','#5F8CB8','#8DB0D3','#B9CFE6','#D8E5F2'],nuclear:['#FEC520'],renov:['#79A928','#A7CC6B','#FDAD17','#5A8A22']}[t.cat][ts.filter(x=>x.cat===t.cat).indexOf(t)%{fosil:6,nuclear:1,renov:4}[t.cat]]})),center:nf(tot),sub:'GWh · '+y}),src:TECH_SRC.gwh+' Porcentaje = GWh de la tecnología ÷ total CFE del año.'});
+  let c3;
+  if(y===2022) c3=card({title:'Variación interanual por tecnología',badges:['cfe','calc'],body:callout('Para 2022 no hay año previo en los informes cargados: <b>Dato no disponible</b>. Elige 2023 o 2024.','warn')});
+  else c3=card({title:`Variación interanual ${py}→${y} por tecnología`,badges:['cfe','calc'],body:barsSVG({labels:ts.map(t=>t.name),series:[{name:'% de cambio',color:'#FDAD17',values:ts.map(t=>yoy(t.gwh[y],t.gwh[py]))}],unit:'%',negative:true,fmt:v=>nf(v,1),h:300}),src:TECH_SRC.gwh,
+    table:{head:['Tecnología','Variación %'],rows:ts.map(t=>[t.name,nf(yoy(t.gwh[y],t.gwh[py]),1)])}});
+  const c4=card({title:'Fósil, nuclear y renovable en la generación de CFE',badges:['cfe','calc'],body:barsSVG({labels:YEARS.map(String),stacked:true,unit:'% del total CFE',series:['fosil','nuclear','renov'].map(c=>({name:CAT[c].name,color:CAT[c].color,values:YEARS.map(yy=>100*genCat(c,yy)/TECH_TOTAL[yy])})),fmt:v=>nf(v,1),h:280}),
+    src:TECH_SRC.gwh,table:{head:['Año','Fósil %','Nuclear %','Renovable %','Limpia % (nuclear + renovable)'],rows:YEARS.map(yy=>[yy,nf(100*genCat('fosil',yy)/TECH_TOTAL[yy],1),nf(100*genCat('nuclear',yy)/TECH_TOTAL[yy],1),nf(100*genCat('renov',yy)/TECH_TOTAL[yy],1),nf(100*(genCat('nuclear',yy)+genCat('renov',yy))/TECH_TOTAL[yy],1)])}});
+  const cc=TECH.find(t=>t.id==='cc'), vp=TECH.find(t=>t.id==='vap');
+  const c5=card({title:'[[Ciclo combinado]] vs [[vapor convencional]]',badges:['cfe','calc'],body:barsSVG({labels:YEARS.map(String),series:[{name:'Ciclo combinado',color:'#0F3254',values:YEARS.map(yy=>cc.gwh[yy])},{name:'Vapor convencional',color:'#FDAD17',values:YEARS.map(yy=>vp.gwh[yy])}],unit:'GWh',h:240})+
+    `<div class="scroll"><table class="t"><thead><tr><th>${y}</th><th>Ciclo combinado</th><th>Vapor convencional</th></tr></thead><tbody><tr><td>Capacidad efectiva (MW)</td><td>${nf(cc.mw[y],1)}</td><td>${nf(vp.mw[y],1)}</td></tr><tr><td>Generación (GWh)</td><td>${nf(cc.gwh[y])}</td><td>${nf(vp.gwh[y])}</td></tr><tr><td>Horas equivalentes a plena carga (cálculo propio)</td><td>${nf(cc.gwh[y]*1000/cc.mw[y])}</td><td>${nf(vp.gwh[y]*1000/vp.mw[y])}</td></tr></tbody></table></div><p>Con más o menos la misma capacidad, el ciclo combinado generó ${nf(cc.gwh[y]/vp.gwh[y],1)} veces la energía del vapor convencional en ${y}. No hay datos por tecnología de eficiencia térmica en las tablas revisadas.</p>`,src:TECH_SRC.gwh+' '+TECH_SRC.mw});
+  const pl=gfPlants().filter(p=>!p.proyecto&&p.gwh[y]!=null).sort((a,b)=>b.gwh[y]-a.gwh[y]);
+  const c6=card({title:`Generación neta por central, ${y}`,badges:['cfe'],body:pl.length?hbarsSVG({items:pl.map(p=>({label:p.n.replace(/^C\.[A-Z]+\. /,''),value:p.gwh[y],color:PTECH[p.t].c})),unit:'GWh',fmt:v=>nf(v,0)}):'<p>Sin centrales con estos filtros.</p>',src:'Tablas «Generación Neta por Central» de cada informe CFE (páginas en la ficha de cada central).'});
+  const n22=NAC.gen2022Gwh, f22=genCat('fosil',2022), nu22=genCat('nuclear',2022), r22=genCat('renov',2022);
+  const c7=card({title:'Nacional vs CFE en 2022',badges:['nac','cfe','calc'],body:barsSVG({labels:['SEN (nacional)','Solo CFE'],stacked:true,unit:'% de la generación',series:[
+      {name:'Fósil',color:'#0F3254',values:[NAC.fosilPct2022,100*f22/TECH_TOTAL[2022]]},{name:'Nuclear',color:'#FEC520',values:[3.1,100*nu22/TECH_TOTAL[2022]]},{name:'Renovable y otras limpias',color:'#79A928',values:[NAC.limpiasPct2022-3.1,100*r22/TECH_TOTAL[2022]]}],fmt:v=>nf(v,1),h:260})+
+    `<p>Los ${nf(TECH_TOTAL[2022])} GWh de CFE equivalen a <b>${nf(100*TECH_TOTAL[2022]/n22,1)} %</b> del total SEN de 2022 (cálculo propio); el informe publica ${nf(CFE_SHARE.vals[0],1)} %. Con la cifra del Informe CFE 2022 (139,831 GWh) saldría ${nf(100*139831/n22,1)} %.</p>`,src:`${ref('prod','59')}; ${TECH_SRC.gwh} Las categorías del SEN suman las publicadas por el PRODESEN (31.2 % limpia incluye nuclear 3.1 %).`});
+  $('#g-charts').innerHTML=c1+c2+c3+c4+c5+c6+c7; }
+
+function gfMap(){ const L=gfPlants(), note=$('#gmap-note');
+  if(window.L && GF.map){ GF.layer.clearLayers(); L.forEach(p=>{ const r=p.proyecto?9:Math.max(8,Math.min(22,5+Math.sqrt(p.gwh[GF.year]||0)/4));
+      const m=window.L.circleMarker([p.lat,p.lon],{radius:r,color:'#fff',weight:2,fillColor:PTECH[p.t].c,fillOpacity:.9}).addTo(GF.layer);
+      m.bindTooltip(p.n+' · '+PTECH[p.t].n); m.on('click',()=>{GF.sel=p.id;gfDetail();}); });
+    if(L.length) GF.map.fitBounds(L.map(p=>[p.lat,p.lon]),{padding:[30,30],maxZoom:7}); else GF.map.setView([23.6,-102.5],5);
+    note.innerHTML='Mapa base: © OpenStreetMap contributors. Tamaño del círculo ∝ generación del año elegido. Coordenadas aproximadas.'; return; }
+  /* mapa de reserva sin red: plano lon/lat con retícula (no se dibujan costas para no inventar geometría) */
+  const W=640,H=420,lo0=-118.5,lo1=-86,la0=14,la1=33.5, X=lo=>(lo-lo0)/(lo1-lo0)*W, Y=la=>H-(la-la0)/(la1-la0)*H; let g='';
+  for(let lo=-115;lo<=-90;lo+=5) g+=`<line class="gl" x1="${X(lo)}" x2="${X(lo)}" y1="0" y2="${H}"/><text x="${X(lo)+2}" y="${H-4}" font-size="10" fill="#4A6078">${-lo}°O</text>`;
+  for(let la=15;la<=32;la+=5) g+=`<line class="gl" x1="0" x2="${W}" y1="${Y(la)}" y2="${Y(la)}"/><text x="3" y="${Y(la)-3}" font-size="10" fill="#4A6078">${la}°N</text>`;
+  L.forEach(p=>{ const r=p.proyecto?8:Math.max(7,Math.min(18,4+Math.sqrt(p.gwh[GF.year]||0)/4));
+    g+=`<g class="pt" tabindex="0" role="button" data-id="${p.id}" style="cursor:pointer"><circle cx="${X(p.lon)}" cy="${Y(p.lat)}" r="${r}" fill="${PTECH[p.t].c}" stroke="#fff" stroke-width="2"><title>${esc(p.n)} · ${PTECH[p.t].n}</title></circle></g>`; });
+  $('#gmap').innerHTML=`<svg class="mapfb" viewBox="0 0 ${W} ${H}" role="img" aria-label="Plano de coordenadas de las centrales">${g}</svg>`;
+  $('#gmap').style.height='auto';
+  $$('#gmap .pt').forEach(n=>{ n.onclick=()=>{GF.sel=n.dataset.id;gfDetail();}; n.onkeydown=e=>{if(e.key==='Enter'){GF.sel=n.dataset.id;gfDetail();}}; });
+  note.innerHTML='Vista sin conexión al mapa base: plano de longitud/latitud con retícula (sin trazar costas ni estados para no inventar geometría). Al abrir la aplicación con internet se carga el mapa base de OpenStreetMap. Coordenadas aproximadas.';
+}
+
+async function initM1(){
+  const upd=()=>{ gfTable(); gfCharts(); gfMap(); gfDetail(); };
+  $('#g-y').onchange=e=>{GF.year=+e.target.value;upd();};
+  $('#g-e').onchange=e=>{GF.estado=e.target.value;upd();};
+  $('#g-t').addEventListener('click',e=>{const b=e.target.closest('.chip'); if(!b) return; const t=b.dataset.t; const on=b.getAttribute('aria-pressed')==='true';
+    if(on&&GF.techs.size===1) return; b.setAttribute('aria-pressed',!on); on?GF.techs.delete(t):GF.techs.add(t); upd();});
+  $('#pl-table').addEventListener('click',e=>{const a=e.target.closest('[data-id]'); if(a){e.preventDefault();GF.sel=a.dataset.id;gfDetail(); $('#pl-detail').scrollIntoView({behavior:'smooth',block:'nearest'});}});
+  upd();
+  const ok=await ensureLeaflet();
+  if(ok && $('#gmap') && !GF.map){ $('#gmap').innerHTML=''; $('#gmap').style.height=''; GF.map=L.map('gmap',{scrollWheelZoom:false}).setView([23.6,-102.5],5);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:12,attribution:'© OpenStreetMap contributors'}).addTo(GF.map); GF.layer=L.layerGroup().addTo(GF.map);
+    setTimeout(()=>{GF.map.invalidateSize();gfMap();},150); }
+}
+
+/* ===================== MÓDULO 2: TRANSMISIÓN ===================== */
+const SYS = {
+  sin:{n:'Sistema Interconectado Nacional (SIN)',c:'#224C76',d:'Sistema principal del país. Margen de reserva indicativo de planeación: 21.3 % (PRODESEN, p. 62). Su demanda máxima coincidente ocurre normalmente en junio, entre las 16 y 17 h.'},
+  sibc:{n:'Sistema Interconectado de Baja California (SIBC)',c:'#FDAD17',d:'Sistema separado del SIN con su propia planeación: margen de reserva indicativo 20.9 % y demanda máxima en agosto entre las 17 y 18 h (PRODESEN, p. 62). La LIE lo menciona como «área de control de Baja California» (arts. 65 y 67, DOF 2014, p. 62).'},
+  sibcs:{n:'Sistema Interconectado de Baja California Sur (SIBCS)',c:'#79A928',d:'Sistema separado con margen de reserva indicativo de 35 % (PRODESEN, p. 62). La LIE le da tratamiento especial en sus arts. 65 y 67 (DOF 2014, p. 62).'},
+  mul:{n:'Sistema en Mulegé (Guerrero Negro), BCS',c:'#071F3C',d:'Pequeño sistema en Mulegé, Baja California Sur. El Informe CFE 2024 (p. 198) cita el «Sistema Guerrero Negro» y la CCI Guerrero Negro IV: 7.5 MW netos, avance de 99 %. Para la clasificación legal de «pequeño sistema eléctrico» ver LIE art. 65.'}
+};
+
+function renderM2(){
+  const head=`<div class="mod-head"><span class="num">2</span><div><h2>Transmisión eléctrica</h2><p>Cómo viaja la electricidad en alta tensión y por qué subir la tensión reduce las pérdidas.</p></div></div>`;
+  const schem=`<svg viewBox="0 0 640 330" class="chart" role="img" aria-label="Esquema de los cuatro sistemas eléctricos" id="sys-svg">
+     <rect x="6" y="6" width="628" height="318" rx="14" fill="#EAF4FC" stroke="#D5E2EE"/>
+     <g class="sysg" tabindex="0" role="button" data-s="sibc" style="cursor:pointer"><rect x="24" y="30" width="150" height="86" rx="12" fill="#FDAD17"/><text x="99" y="68" text-anchor="middle" font-weight="700" font-size="15" fill="#071F3C">SIBC</text><text x="99" y="88" text-anchor="middle" font-size="11" fill="#071F3C">Baja California</text></g>
+     <g class="sysg" tabindex="0" role="button" data-s="sibcs" style="cursor:pointer"><rect x="24" y="150" width="150" height="86" rx="12" fill="#79A928"/><text x="99" y="188" text-anchor="middle" font-weight="700" font-size="15" fill="#071F3C">SIBCS</text><text x="99" y="208" text-anchor="middle" font-size="11" fill="#071F3C">Baja California Sur</text></g>
+     <g class="sysg" tabindex="0" role="button" data-s="mul" style="cursor:pointer"><rect x="56" y="252" width="86" height="52" rx="10" fill="#071F3C"/><text x="99" y="275" text-anchor="middle" font-weight="700" font-size="12" fill="#FEC520">Mulegé</text><text x="99" y="292" text-anchor="middle" font-size="10" fill="#fff">(BCS)</text></g>
+     <g class="sysg" tabindex="0" role="button" data-s="sin" style="cursor:pointer"><rect x="260" y="30" width="360" height="274" rx="16" fill="#224C76"/><text x="440" y="150" text-anchor="middle" font-weight="700" font-size="30" fill="#FEC520" font-family="Poppins,sans-serif">SIN</text><text x="440" y="176" text-anchor="middle" font-size="13" fill="#fff">Sistema Interconectado Nacional</text></g>
+     
+     <line x1="176" y1="73" x2="258" y2="73" stroke="#B3261E" stroke-width="2.4" stroke-dasharray="5 5"/><line x1="176" y1="193" x2="258" y2="193" stroke="#B3261E" stroke-width="2.4" stroke-dasharray="5 5"/>
+     <text x="320" y="323" font-size="10" fill="#4A6078" text-anchor="middle">Esquema conceptual: no es geográfico ni a escala; no representa líneas reales.</text></svg>`;
+  const A=sec(1,'Sistemas eléctricos de México',`<div class="grid g2"><div class="card">${schem}<div class="callout warn">Las líneas rojas discontinuas indican <b>separación entre sistemas</b>, no cables. Los documentos cargados no contienen trazas geográficas de líneas ni polígonos de los sistemas: no se inventan. Puedes cargar una capa oficial abajo.</div></div>
+    <div id="sys-info"></div></div>
+    <div class="card" style="margin-top:14px"><h4>Cargar capa GeoJSON oficial (opcional)</h4><p>Si descargas una capa oficial de líneas de transmisión o sistemas (por ejemplo del CENACE o la SENER), cárgala aquí: se dibuja sobre el mapa base y solo existe en tu navegador.</p><input type="file" id="geo2" accept=".json,.geojson"><div id="geomap2" class="map" style="margin-top:8px;display:none"></div></div>`);
+
+  const T=TRANS;
+  const B=sec(2,'Indicadores de la red de transmisión',`<div class="grid g4">
+    ${card({title:'Longitud de líneas',badges:['cfe'],body:kpi(nf(T.km[2024]),'km (2024)','+'+nf(yoy(T.km[2024],T.km[2023]),2)+' % vs 2023'),src:T.src})}
+    ${card({title:'Subestaciones',badges:['cfe'],body:kpi(nf(T.subs[2024]),'unidades (2024)',`${T.subsGE161} ≥ 161 kV y ${nf(T.subsLE161)} ≤ 161 kV`),src:T.srcSubs})}
+    ${card({title:'Capacidad de transformación',badges:['cfe'],body:kpi(nf(T.mva[2024]),'MVA (2024)','+'+nf(yoy(T.mva[2024],T.mva[2023]),2)+' % vs 2023'),src:T.src})}
+    ${card({title:'Niveles de tensión de la RNT',badges:['cfe'],body:kpi('69 a 400','kV','Rango de la [[rnt|Red Nacional de Transmisión]]'),src:T.srcIE})}</div>
+    <div class="grid g2" style="margin-top:14px">
+    ${card({title:'Líneas de transmisión (km)',badges:['cfe'],body:lineSVG({xs:YEARS,series:[{name:'km',color:'#224C76',ys:YEARS.map(y=>T.km[y])}],unit:'km',h:230,fmt:v=>nf(v)}),src:T.src,table:{head:['Año','km','Subestaciones','MVA'],rows:YEARS.map(y=>[y,nf(T.km[y]),nf(T.subs[y]),nf(T.mva[y])])}})}
+    ${card({title:'Subestaciones por nivel de tensión, 2024',badges:['cfe'],body:barsSVG({labels:['≥ 161 kV','≤ 161 kV'],series:[{name:'Subestaciones',color:'#071F3C',values:[T.subsGE161,T.subsLE161]}],unit:'unidades',showVals:true,h:230}),src:T.srcSubs})}
+    ${card({title:'Importación y exportación por la RNT',badges:['cfe'],body:barsSVG({labels:YEARS.map(String),series:[{name:'Importación',color:'#FDAD17',values:YEARS.map(y=>T.imp[y])},{name:'Exportación',color:'#224C76',values:YEARS.map(y=>T.exp[y])}],unit:'GWh',h:240}),src:T.srcIE})}
+    ${card({title:'Capacidad de transformación (MVA)',badges:['cfe'],body:barsSVG({labels:YEARS.map(String),series:[{name:'MVA',color:'#79A928',values:YEARS.map(y=>T.mva[y])}],unit:'MVA',h:240,showVals:true}),src:T.src})}
+    </div>
+    ${callout('<b>Dato no disponible:</b> los informes revisados no traen el desglose de kilómetros de línea por nivel de tensión (69, 115, 230, 400 kV). Si lo necesitas, carga la sección de transmisión del PRODESEN (capítulo 5) o el Anexo estadístico de CFE Transmisión.','warn')}`);
+
+  const C=sec(3,'Simulador de transmisión',`<div class="grid g2"><div class="card">
+    <h4>Parámetros</h4>
+    <label class="f" for="tx-p">Potencia transmitida P: <b id="tx-pv"></b> MW</label><input type="range" id="tx-p" min="10" max="2000" step="10" value="500">
+    <label class="f" for="tx-v">Tensión entre líneas V: <b id="tx-vv"></b> kV</label><input type="range" id="tx-v" min="34.5" max="500" step="0.5" value="400">
+    <div class="chips" id="tx-presets"><span style="align-self:center;font-size:.8rem">Valores de la RNT:</span>${[69,115,161,400].map(v=>`<button class="chip" data-v="${v}">${v} kV</button>`).join('')}</div>
+    <label class="f" for="tx-r">Resistencia equivalente por fase R: <b id="tx-rv"></b> Ω</label><input type="range" id="tx-r" min="0.5" max="50" step="0.5" value="5">
+    <label class="f" for="tx-f">Factor de potencia cos φ: <b id="tx-fv"></b></label><input type="range" id="tx-f" min="0.5" max="1" step="0.01" value="1">
+    <div class="callout"><span class="mono">I = P / (√3 · V · cos φ)</span><br><span class="mono">P<sub>pérdidas</sub> = 3 · I² · R</span><br><small>Con P en W, V en V, I en A, R en Ω.</small></div>
+    </div><div class="card"><h4>Resultados</h4><div id="tx-out"></div></div></div>
+    <div class="grid g2" style="margin-top:14px"><div class="card"><h4>Pérdidas y corriente según la tensión (mismos P, R y cos φ)</h4><div id="tx-ch1"></div><div id="tx-ch2"></div></div>
+    <div class="card"><h4>Comparación con las tensiones de la RNT</h4><div id="tx-ch3"></div></div></div>
+    ${card({title:'Supuestos y limitaciones del modelo',body:`<ul><li>Sistema trifásico equilibrado; V es tensión entre líneas y se mantiene constante.</li><li>Solo se considera la resistencia por fase. No se incluyen reactancia inductiva, capacitancia, efecto corona ni variaciones de la resistencia con la temperatura.</li><li>La corriente se calcula con la potencia transmitida P (la potencia activa que se quiere entregar). No se recalcula la caída de tensión.</li><li>R es un dato de entrada: depende de la longitud y del conductor, y los documentos cargados no lo proporcionan. Los valores por defecto son ilustrativos.</li><li>El modelo muestra la tendencia física: a igual potencia, al subir V baja I y las pérdidas caen con 1/V².</li></ul>`})}`);
+  return head+A+B+C;
+}
+
+function txCalc(P,V,R,f){ const I=P*1e6/(Math.sqrt(3)*V*1e3*f); const Pl=3*I*I*R/1e6; return {I,Pl,pct:100*Pl/P}; }
+function initM2(){
+  const info=k=>{ $('#sys-info').innerHTML=card({title:SYS[k].n,body:`<p>${tx(esc(SYS[k].d))}</p><div class="callout warn"><b>Verificar:</b> la existencia o ausencia de enlaces entre sistemas debe confirmarse con un mapa oficial del CENACE; los documentos cargados no lo detallan.</div>`,
+    src:`${ref('prod','62')}; ${ref('lie14','62')}; ${ref('cfe24','198')}`}); $$('.sysg').forEach(g=>g.style.opacity=g.dataset.s===k?1:.6); };
+  $$('.sysg').forEach(g=>{ g.onclick=()=>info(g.dataset.s); g.onkeydown=e=>{if(e.key==='Enter'||e.key===' ') info(g.dataset.s);}; }); info('sin');
+  const g=id=>+$('#'+id).value;
+  const run=()=>{ const P=g('tx-p'),V=g('tx-v'),R=g('tx-r'),f=g('tx-f');
+    $('#tx-pv').textContent=nf(P); $('#tx-vv').textContent=nf(V,1); $('#tx-rv').textContent=nf(R,1); $('#tx-fv').textContent=nf(f,2);
+    const r=txCalc(P,V,R,f), ok=r.Pl<P;
+    $('#tx-out').innerHTML=`<div class="grid" style="grid-template-columns:1fr 1fr">${kpi(nf(r.I,1),'A','Corriente de línea I')}${kpi(nf(r.Pl,2),'MW','Pérdidas resistivas')}${kpi(nf(r.pct,2)+' %','','Pérdidas / P transmitida')}${kpi(nf(Math.max(0,P-r.Pl),1),'MW','Potencia que llega')}</div>
+      <p class="mono" style="font-size:.8rem">I = ${nf(P*1e6)} W / (√3 · ${nf(V*1e3)} V · ${nf(f,2)}) = ${nf(r.I,1)} A<br>P<sub>pérd</sub> = 3 · (${nf(r.I,1)} A)² · ${nf(R,1)} Ω = ${nf(r.Pl*1e6)} W</p>
+      ${ok?'':callout('Con estos parámetros las pérdidas igualan o superan la potencia: el modelo deja de ser realista. Sube la tensión o baja R.','bad')}
+      ${f<1?callout('Con cos φ &lt; 1 la corriente aumenta ('+nf(100*(1/f-1),1)+' % más que con cos φ = 1) y las pérdidas crecen con 1/cos²φ.'):''}`;
+    const Vs=[...Array(48)].map((_,i)=>34.5+(500-34.5)*i/47);
+    const cur=[...Vs,V].sort((a,b)=>a-b);
+    $('#tx-ch1').innerHTML=lineSVG({xs:cur.map((v,i)=>i%6===0?nf(v,0):''),series:[{name:'Pérdidas (MW)',color:'#B3261E',ys:cur.map(v=>txCalc(P,v,R,f).Pl)}],unit:'MW',h:220,fmt:v=>nf(v,2),marks:[{i:cur.indexOf(V),y:r.Pl}],xLabel:'Tensión (kV)'});
+    $('#tx-ch2').innerHTML=lineSVG({xs:cur.map((v,i)=>i%6===0?nf(v,0):''),series:[{name:'Corriente (A)',color:'#224C76',ys:cur.map(v=>txCalc(P,v,R,f).I)}],unit:'A',h:220,fmt:v=>nf(v,0),marks:[{i:cur.indexOf(V),y:r.I}],xLabel:'Tensión (kV)'});
+    const pr=[69,115,161,400].map(v=>({v,...txCalc(P,v,R,f)}));
+    $('#tx-ch3').innerHTML=barsSVG({labels:pr.map(p=>p.v+' kV'),series:[{name:'Pérdidas (MW)',color:'#B3261E',values:pr.map(p=>p.Pl)}],unit:'MW',showVals:true,fmt:v=>nf(v,1),h:250})+
+      `<p>Con los mismos P, R y cos φ, pasar de 115 a 400 kV reduce las pérdidas ${nf(pr[1].Pl/pr[3].Pl,1)} veces: (400/115)² = ${nf(Math.pow(400/115,2),1)}.</p><div class="scroll"><table class="t"><thead><tr><th>V (kV)</th><th>I (A)</th><th>Pérdidas (MW)</th><th>% de P</th></tr></thead><tbody>${pr.map(p=>`<tr><td>${p.v}</td><td>${nf(p.I,0)}</td><td>${nf(p.Pl,2)}</td><td>${nf(p.pct,2)}</td></tr>`).join('')}</tbody></table></div>`; };
+  ['tx-p','tx-v','tx-r','tx-f'].forEach(i=>$('#'+i).addEventListener('input',run));
+  $('#tx-presets').addEventListener('click',e=>{const b=e.target.closest('.chip'); if(b){$('#tx-v').value=b.dataset.v;run();}}); run();
+  geoLoader('geo2','geomap2');
+}
+
+/* carga local de GeoJSON del usuario (no se sube a ningún servidor) */
+function geoLoader(inputId,mapId){
+  $('#'+inputId).addEventListener('change',async e=>{ const f=e.target.files[0]; if(!f) return; const box=$('#'+mapId); box.style.display='block';
+    let gj; try{ gj=JSON.parse(await f.text()); }catch(err){ box.innerHTML='<div class="callout bad">El archivo no es un GeoJSON válido.</div>'; return; }
+    const ok=await ensureLeaflet(); if(!ok){ box.innerHTML='<div class="callout bad">No se pudo cargar el mapa base (sin conexión).</div>'; return; }
+    if(box._m){ box._m.remove(); } box.innerHTML=''; const m=L.map(box); box._m=m; L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:12,attribution:'© OpenStreetMap contributors'}).addTo(m);
+    const lay=L.geoJSON(gj,{onEachFeature:(ft,l)=>{ const p=ft.properties||{}; const k=Object.keys(p)[0]; if(k) l.bindPopup(Object.entries(p).slice(0,6).map(([a,b])=>`<b>${esc(a)}</b>: ${esc(b)}`).join('<br>')); }}).addTo(m); try{ m.fitBounds(lay.getBounds()); }catch(err){ m.setView([23.6,-102.5],5);} setTimeout(()=>m.invalidateSize(),100); });
+}
+
+/* ===================== MÓDULO 3: DISTRIBUCIÓN ===================== */
+function renderM3(){
+  const D=DIST;
+  const head=`<div class="mod-head"><span class="num">3</span><div><h2>Distribución eléctrica</h2><p>Del transformador de la subestación al medidor de tu casa.</p></div></div>`;
+  const A=sec(1,'Divisiones de distribución de CFE',`<div class="card"><p>CFE Distribución atiende a <b>${D.usuariosM} millones de usuarios</b> mediante <b>${D.divisiones} divisiones</b> y <b>${D.zonas} zonas</b> (${D.srcU}).</p>
+    <div class="grid g4" id="div-tiles">${D.divisionesNombres.map((n,i)=>`<div class="card" style="padding:10px;border-left:5px solid ${PAL[i%PAL.length]}"><b>${i+1}. ${n}</b></div>`).join('')}</div>
+    ${callout('Esta lista reproduce los nombres de las 16 divisiones (tablas «División Comercial», '+D.srcDiv+') y <b>no es un mapa</b>: los documentos cargados no traen los límites territoriales de las divisiones. Tampoco se reparten indicadores nacionales entre divisiones sin evidencia: <b>Dato no disponible</b> por división. Para el mapa territorial, carga una capa oficial de CFE:','warn')}
+    <input type="file" id="geo3" accept=".json,.geojson"><div id="geomap3" class="map" style="margin-top:8px;display:none"></div></div>`);
+  const B=sec(2,'Indicadores de distribución',`<div class="grid g4">
+    ${card({title:'Usuarios atendidos',badges:['cfe'],body:kpi('49.1 M','usuarios (2024)','47.5 M en 2022 · 48.3 M en 2023'),src:ref('cfe24','260')})}
+    ${card({title:'Redes generales de distribución',badges:['cfe','calc'],body:kpi(nf(D.kmMT+D.kmBT),'km','MT '+nf(D.kmMT)+' + BT '+nf(D.kmBT)),src:D.srcKm})}
+    ${card({title:'Pérdidas de energía, 2024',badges:['cfe'],body:kpi(nf(D.perdTot[2024],2)+' %','','Incluye alta tensión. MT+BT: '+nf(D.perdMTBT[2024],2)+' %'),src:D.srcP})}
+    ${card({title:'Grado de electrificación, 2024',badges:['cfe'],body:kpi('99.64 %','','Viviendas con servicio'),src:D.srcE})}</div>
+    <div class="grid g2" style="margin-top:14px">
+    ${card({title:'Usuarios de CFE (millones)',badges:['cfe'],body:barsSVG({labels:YEARS.map(String),series:[{name:'Usuarios',color:'#224C76',values:[47.504857,48.283178,49.100823]}],unit:'millones',showVals:true,fmt:v=>nf(v,2),h:230}),src:ref('cfe24','260')})}
+    ${card({title:'Pérdidas de energía (%)',badges:['cfe'],body:lineSVG({xs:YEARS,series:[{name:'Totales (incl. alta tensión)',color:'#B3261E',ys:YEARS.map(y=>D.perdTot[y])},{name:'Media y baja tensión',color:'#FDAD17',ys:YEARS.map(y=>D.perdMTBT[y])}],unit:'%',h:240,fmt:v=>nf(v,2)}),src:D.srcP,table:{head:['Año','Totales %','MT+BT %'],rows:YEARS.map(y=>[y,D.perdTot[y],D.perdMTBT[y]])}})}
+    ${card({title:'Kilómetros de red de distribución, 2024',badges:['cfe'],body:hbarsSVG({items:[{label:'Media tensión',value:D.kmMT,color:'#224C76'},{label:'Baja tensión',value:D.kmBT,color:'#79A928'},{label:'Subtransmisión (servicio)',value:D.kmSub,color:'#FDAD17'}],unit:'km'}),src:D.srcKm})}
+    ${card({title:'Continuidad del servicio: SAIDI y SAIFI',badges:['cfe'],body:barsSVG({labels:YEARS.map(String),series:[{name:'SAIDI (min/cliente)',color:'#071F3C',values:YEARS.map(y=>D.saidi[y])},{name:'SAIFI (interrupciones/cliente ×10)',color:'#FDAD17',values:YEARS.map(y=>D.saifi[y]*10)}],unit:'valor',fmt:v=>nf(v,2),h:240})+'<p class="src">SAIFI se grafica ×10 para compartir escala; valores reales: '+YEARS.map(y=>D.saifi[y]).join(' · ')+'.</p>',src:D.srcS})}
+    ${card({title:'Grado de electrificación (%)',badges:['cfe'],body:lineSVG({xs:Object.keys(D.electrificacion),series:[{name:'%',color:'#79A928',ys:Object.values(D.electrificacion)}],unit:'%',h:230,fmt:v=>nf(v,2)}),src:D.srcE})}
+    ${card({title:'Infraestructura, 2024',badges:['cfe','calc'],body:`<div class="scroll"><table class="t"><tbody><tr><th>Subestaciones de distribución</th><td>${nf(D.ssee)}</td></tr><tr><th>Transformadores de potencia</th><td>${nf(D.trPot)} · ${nf(D.mvaPot)} MVA (promedio ${nf(D.mvaPot/D.trPot,1)} MVA)</td></tr><tr><th>Transformadores de distribución</th><td>${nf(D.trDist)} · ${nf(D.mvaDist)} MVA (promedio ${nf(D.mvaDist*1000/D.trDist,1)} kVA)</td></tr></tbody></table></div>`,src:D.srcInf})}
+    </div>`);
+  const C=sec(3,'Simulador de transformador ideal',`<div class="grid g2"><div class="card"><h4>Parámetros</h4>
+    <div class="chips" id="tr-ph"><button class="chip" data-p="1" aria-pressed="false">Monofásico</button><button class="chip" data-p="3" aria-pressed="true">Trifásico (V entre líneas)</button></div>
+    <label class="f" for="tr-v">Tensión primaria Vp: <b id="tr-vv"></b> kV</label><input type="range" id="tr-v" min="0.1" max="400" step="0.1" value="115">
+    <label class="f" for="tr-a">Relación de espiras a = Np/Ns: <b id="tr-av"></b></label><input type="range" id="tr-a" min="0.2" max="120" step="0.01" value="8.71">
+    <label class="f" for="tr-s">Potencia aparente S: <b id="tr-sv"></b> kVA</label><input type="range" id="tr-s" min="5" max="100000" step="5" value="30000">
+    <div class="chips"><span style="align-self:center;font-size:.8rem">Ejemplos ilustrativos:</span><button class="chip" data-ex="115,8.71,30000">115 kV → 13.2 kV</button><button class="chip" data-ex="13.2,60,75">13.2 kV → 0.22 kV</button></div>
+    <div class="callout"><span class="mono">Vp / Vs = Np / Ns</span><br><span class="mono">Vp · Ip = Vs · Is</span><br><small>Trifásico: S = √3·V·I. Monofásico: S = V·I.</small></div></div>
+    <div class="card"><h4>Resultados</h4><div id="tr-out"></div></div></div>
+    <div class="grid g2" style="margin-top:14px"><div class="card"><h4>Tensiones</h4><div id="tr-c1"></div></div><div class="card"><h4>Corrientes</h4><div id="tr-c2"></div></div></div>
+    ${card({title:'Supuestos del transformador ideal',body:`<ul><li>Sin pérdidas en el cobre ni en el núcleo, sin flujo de dispersión ni corriente de magnetización.</li><li>Régimen sinusoidal permanente. La potencia aparente se conserva: S<sub>p</sub> = S<sub>s</sub>.</li><li>Unidades: kV, A y kVA (kV × A = kVA).</li><li>Un transformador real tiene eficiencia menor al 100 % y regulación de tensión.</li><li>Los ejemplos de 115 → 13.2 kV y 13.2 → 0.22 kV son <b>ilustrativos</b>: no provienen de los documentos cargados.</li></ul>`})}`);
+  return head+A+B+C;
+}
+
+function initM3(){
+  geoLoader('geo3','geomap3');
+  let ph=3; const g=id=>+$('#'+id).value;
+  const run=()=>{ const Vp=g('tr-v'),a=g('tr-a'),S=g('tr-s'); $('#tr-vv').textContent=nf(Vp,1); $('#tr-av').textContent=nf(a,2); $('#tr-sv').textContent=nf(S);
+    const k=ph===3?Math.sqrt(3):1, Vs=Vp/a, Ip=S/(k*Vp), Is=S/(k*Vs);
+    $('#tr-out').innerHTML=`<div class="grid" style="grid-template-columns:1fr 1fr">${kpi(nf(Vs,3),'kV','Tensión secundaria Vs = Vp / a')}${kpi(nf(Is/Ip,2),'','Is / Ip = a')}${kpi(nf(Ip,1),'A','Corriente primaria Ip')}${kpi(nf(Is,1),'A','Corriente secundaria Is')}</div>
+     <p class="mono" style="font-size:.8rem">Vs = ${nf(Vp,1)} kV / ${nf(a,2)} = ${nf(Vs,3)} kV<br>Ip = ${nf(S)} kVA / (${ph===3?'√3 · ':''}${nf(Vp,1)} kV) = ${nf(Ip,1)} A<br>Verificación: ${ph===3?'√3 · ':''}Vp·Ip = ${nf(k*Vp*Ip,1)} kVA ; ${ph===3?'√3 · ':''}Vs·Is = ${nf(k*Vs*Is,1)} kVA</p>
+     ${a>1?callout('a &gt; 1: transformador <b>reductor</b>: baja la tensión y sube la corriente.'):a<1?callout('a &lt; 1: transformador <b>elevador</b>: sube la tensión y baja la corriente.'):callout('a = 1: aislamiento sin cambio de tensión.')}`;
+    $('#tr-c1').innerHTML=barsSVG({labels:['Primario','Secundario'],series:[{name:'Tensión (kV)',color:'#224C76',values:[Vp,Vs]}],unit:'kV',showVals:true,fmt:v=>nf(v,2),h:220});
+    $('#tr-c2').innerHTML=barsSVG({labels:['Primario','Secundario'],series:[{name:'Corriente (A)',color:'#FDAD17',values:[Ip,Is]}],unit:'A',showVals:true,fmt:v=>nf(v,1),h:220}); };
+  ['tr-v','tr-a','tr-s'].forEach(i=>$('#'+i).addEventListener('input',run));
+  $('#tr-ph').addEventListener('click',e=>{const b=e.target.closest('.chip'); if(!b) return; ph=+b.dataset.p; $$('#tr-ph .chip').forEach(x=>x.setAttribute('aria-pressed',x===b)); run();});
+  $$('.chip[data-ex]').forEach(b=>b.onclick=()=>{const [v,a,s]=b.dataset.ex.split(',');$('#tr-v').value=v;$('#tr-a').value=a;$('#tr-s').value=s;run();}); run();
+}
+
+/* ===================== MÓDULO 4: ¿SABÍAS QUE? + REFORMA ===================== */
+const T_=id=>TECH.find(t=>t.id===id);
+const LV=T_('nuc');
+function hoursYear(y){return (y%4===0)?8784:8760;}
+function findings(){
+  const mix=NAC.mix2022, g=n=>mix.find(m=>m.n===n).v;
+  const renN=mix.filter(m=>m.c==='renov'), renT=sum(renN.map(m=>m.v));
+  const cf=y=>100*LV.gwh[y]/(LV.mw[y]*hoursYear(y));
+  const hid=T_('hid'), fv=T_('fv'), eol=T_('eol');
+  const fosCFE=y=>genCat('fosil',y), totCFE=y=>TECH_TOTAL[y];
+  const avgTd=D=>D.mvaDist*1000/D.trDist;
+  const lossRatio=Math.pow(400/115,2);
+  return [
+   {id:'R1',t:'r',h:'Casi 7 de cada 10 kWh nacionales se generaron con combustibles fósiles',b:`En 2022 la generación nacional fue de ${nf(NAC.gen2022Gwh)} GWh: ${NAC.limpiasPct2022} % con energías limpias y ${NAC.fosilPct2022} % fósil. Solo el ciclo combinado aportó ${g('Ciclo combinado')} %.`,badges:['nac'],src:ref('prod','59')},
+   {id:'R2',t:'r',h:'Cada tecnología evita (o emite) CO₂ de forma distinta',b:`CFE reporta emisiones evitadas de 7,661,247 t de CO₂ en una de sus EPS en 2024 y 5,147,747 t en otra en 2022. Los factores de emisión por tecnología (ciclo de vida) <b>no están en los documentos cargados</b>: Dato no disponible. Referencia sugerida para completarlo: IPCC AR5 WG3, Anexo III.`,badges:['cfe','nd'],src:ref('cfe24','61 (EPS VI)')+'; '+ref('cfe22','50 (EPS I)')},
+   {id:'R3',t:'r',h:'La nuclear es energía limpia por ley, pero no es renovable',b:`La LIE 2014 (art. 3 fr. XXII, inciso i) y la Ley del Sector Eléctrico 2025 (art. 3 fr. XXI, inciso i) incluyen la nucleoeléctrica entre las «Energías Limpias». El uranio es un recurso que se agota, por eso no es renovable. Laguna Verde generó ${nf(LV.gwh[2024])} GWh brutos en 2024.`,badges:['legal','cfe'],src:ref('lie14','45-46')+'; '+ref('dec25','86')+'; '+ref('cfe24','27')},
+   {id:'R4',t:'r',h:`La hidráulica es ${nf(100*g('Hidráulica')/renT,0)} % de la generación renovable nacional`,b:`Con base en la Figura 4.9: renovables = ${nf(renT,1)} % de la generación 2022; hidráulica ${g('Hidráulica')}, eólica ${g('Eoloeléctrica')}, solar ${g('Solar fotovoltaica')}, geotérmica ${g('Geotérmica')} y bioenergía ${g('Bioenergía')} puntos. Las participaciones internas son un cálculo propio y la suma publicada de la figura es 100.1 % por redondeo.`,badges:['nac','calc'],src:ref('prod','59')},
+   {id:'R5',t:'r',h:'El clima mueve la generación: hidro de CFE cayó de 34,110 a 19,568 GWh',b:`La hidroeléctrica de CFE bajó ${nf(-yoy(hid.gwh[2023],hid.gwh[2022]),1)} % de 2022 a 2023 y repuntó a ${nf(hid.gwh[2024])} GWh en 2024, con capacidad casi constante (${nf(hid.mw[2022])}–${nf(hid.mw[2024])} MW). Mientras tanto el vapor convencional subió de ${nf(T_('vap').gwh[2022])} a ${nf(T_('vap').gwh[2023])} GWh. Los informes no atribuyen causas: la relación con la sequía <b>no está documentada aquí</b>.`,badges:['cfe','calc'],src:TECH_SRC.gwh},
+   {id:'G1',t:'g',h:'El ciclo combinado domina la generación',b:`${g('Ciclo combinado')} % de la generación nacional 2022 (PRODESEN) y ${nf(T_('cc').gwh[2024])} GWh en CFE en 2024 (${nf(100*T_('cc').gwh[2024]/TECH_TOTAL[2024],1)} % de su generación bruta, cálculo propio).`,badges:['nac','cfe'],src:ref('prod','59')+'; '+ref('cfe24','27')},
+   {id:'G2',t:'g',h:'Laguna Verde: la central con más MW documentados en el mapa',b:`Con ${nf(LV.mw[2024])} MW es la mayor entre las centrales del mapa con capacidad documentada. No se afirma que sea la mayor del país: los documentos no traen el ranking nacional de centrales.`,badges:['cfe'],src:ref('cfe24','22')},
+   {id:'G3',t:'g',h:`Laguna Verde trabaja con factor de planta de ${nf(cf(2022),0)} a ${nf(cf(2024),0)} %`,b:`Factor = GWh / (MW × horas). 2022: ${nf(LV.gwh[2022])} / (1,608 × 8,760) = ${nf(cf(2022),1)} %; 2024: ${nf(LV.gwh[2024])} / (1,608 × 8,784) = ${nf(cf(2024),1)} %. Se usa generación bruta, así que el valor neto sería algo menor.`,badges:['calc'],src:ref('cfe24','22 y 27')},
+   {id:'G4',t:'g',h:'La solar de CFE creció de 7 a 555 GWh en dos años; la eólica casi no cambió',b:`Solar fotovoltaica: ${fv.gwh[2022]} → ${fv.gwh[2023]} → ${fv.gwh[2024]} GWh (capacidad ${fv.mw[2022]} → ${fv.mw[2024]} MW). Eólica: ${eol.gwh[2022]} → ${eol.gwh[2024]} GWh. Cifras de CFE, no del país: gran parte de la solar y la eólica nacional es de productores privados.`,badges:['cfe'],src:TECH_SRC.gwh},
+   {id:'G5',t:'g',h:'Un solo proyecto hidroeléctrico puede beneficiar a más de un millón de habitantes',b:`Según el informe 2023, C.H. Infiernillo (${nf(HOGARES[0].gwh,1)} GWh/año esperados) beneficia a ${HOGARES[0].hab} millones de habitantes; Tuxpan Fase I (proyecto de ciclo combinado) a ${HOGARES[4].hab} millones. Son beneficios estimados por CFE, no consumo medido.`,badges:['cfe'],src:ref('cfe23','238-239')},
+   {id:'T1',t:'t',h:`${nf(TRANS.km[2024])} km de líneas de transmisión`,b:`Equivale a ${nf(TRANS.km[2024]/40075,1)} vueltas a la Tierra (circunferencia ecuatorial 40,075 km; cálculo propio). Creció ${nf(TRANS.km[2024]-TRANS.km[2022])} km entre 2022 y 2024.`,badges:['cfe','calc'],src:TRANS.src},
+   {id:'T2',t:'t',h:'Las subestaciones de más de 161 kV son minoría',b:`${TRANS.subsGE161} de ${nf(TRANS.subs[2024])} subestaciones (${nf(100*TRANS.subsGE161/TRANS.subs[2024],1)} %) operan a 161 kV o más; la red troncal usa tensiones altas porque, a igual potencia, la corriente y las pérdidas bajan (ver simulador).`,badges:['cfe','calc'],src:TRANS.srcSubs},
+   {id:'T3',t:'t',h:'Baja California y Baja California Sur no forman parte del SIN',b:`Tienen sistemas propios con margen de reserva indicativo de ${NAC.margenReserva.SIBC} % (SIBC) y ${NAC.margenReserva.SIBCS} % (SIBCS), frente a ${NAC.margenReserva.SIN} % del SIN.`,badges:['plan'],src:ref('prod','62')},
+   {id:'T4',t:'t',h:'México también importa y exporta electricidad',b:`En 2024 se importaron ${nf(TRANS.imp[2024])} GWh y se exportaron ${nf(TRANS.exp[2024])} GWh por la RNT (en 2022: ${nf(TRANS.imp[2022])} y ${nf(TRANS.exp[2022])}). Los informes no desglosan los países.`,badges:['cfe'],src:TRANS.srcIE},
+   {id:'T5',t:'t',h:`De 115 a 400 kV, las pérdidas caen ${nf(lossRatio,1)} veces`,b:`Con P y R fijos, I = P/(√3·V) y Ppérd = 3·I²·R ∝ 1/V². Por eso (400/115)² = ${nf(lossRatio,1)}. Es resultado del modelo simplificado, no una medición de la red.`,badges:['calc'],src:'Cálculo propio con el simulador del Módulo 2'},
+   {id:'D1',t:'d',h:'CFE atendió a 49.1 millones de usuarios en 2024',b:`Eran 47.5 millones en 2022: ${nf(49100823-47504857)} usuarios más en dos años (+${nf(yoy(49100823,47504857),1)} %, cálculo propio).`,badges:['cfe','calc'],src:ref('cfe24','260')},
+   {id:'D2',t:'d',h:`Las redes de distribución suman ${nf((DIST.kmMT+DIST.kmBT)/1000,0)} mil km`,b:`Media tensión: ${nf(DIST.kmMT)} km; baja tensión: ${nf(DIST.kmBT)} km. Más que la red de transmisión (${nf(TRANS.km[2024])} km) en un factor de ${nf((DIST.kmMT+DIST.kmBT)/TRANS.km[2024],1)}.`,badges:['cfe','calc'],src:DIST.srcKm},
+   {id:'D3',t:'d',h:'Las pérdidas de distribución bajaron de 11.05 % a 10.69 %',b:`Pérdidas totales 2022–2024: ${YEARS.map(y=>DIST.perdTot[y]+' %').join(', ')}. En media y baja tensión: ${YEARS.map(y=>DIST.perdMTBT[y]+' %').join(', ')}. Los informes no desglosan cuánto es técnico y cuánto no técnico.`,badges:['cfe'],src:DIST.srcP},
+   {id:'D4',t:'d',h:`El transformador de distribución promedio es de ${nf(avgTd(DIST),1)} kVA`,b:`${nf(DIST.trDist)} transformadores suman ${nf(DIST.mvaDist)} MVA. Los de potencia promedian ${nf(DIST.mvaPot/DIST.trPot,1)} MVA (${nf(DIST.trPot)} unidades, ${nf(DIST.mvaPot)} MVA). Promedios de cálculo propio.`,badges:['cfe','calc'],src:DIST.srcInf},
+   {id:'D5',t:'d',h:`Un usuario estuvo sin luz en promedio ${DIST.saidi[2024]} min en 2024`,b:`SAIDI bajó de ${DIST.saidi[2022]} a ${DIST.saidi[2024]} min y SAIFI de ${DIST.saifi[2022]} a ${DIST.saifi[2024]} interrupciones por usuario. Los informes no separan usuarios residenciales e industriales.`,badges:['cfe'],src:DIST.srcS}
+  ];
+}
+const FTOP={r:'Recursos',g:'Generación',t:'Transmisión',d:'Distribución'};
+const EVENTS=[
+ {y:'2013-12-20',t:'Reforma constitucional en materia de energía',d:'El decreto reforma los artículos 25, 27 y 28 de la Constitución. Sus transitorios dan paso a las empresas productivas del Estado, a la «estricta separación legal» en electricidad y a los Órganos Reguladores Coordinados.',s:ref('cpeum')},
+ {y:'2014-08-11',t:'Ley de la Industria Eléctrica (LIE)',d:'Establece que generación y comercialización se realizan en libre competencia (art. 4), la estricta separación legal (art. 8), define Energías Limpias (art. 3 fr. XXII) y crea el CENACE como organismo público descentralizado (art. 107). El transitorio Cuarto ordena la separación contable, operativa, funcional y legal de CFE.',s:ref('lie14','44-82')},
+ {y:'2016',t:'Inicia el Mercado Eléctrico Mayorista',d:'El Informe CFE 2024 ubica el inicio del MEM en 2016.',s:ref('cfe24','26')},
+ {y:'2025-03-18',t:'Ley del Sector Eléctrico y Ley de la Empresa Pública del Estado CFE',d:'El decreto del DOF del 18/03/2025 expide el nuevo marco legal; la ley de CFE la define como «empresa pública del Estado». La Ley del Sector Eléctrico conserva la nucleoeléctrica entre las Energías Limpias (art. 3 fr. XXI).',s:ref('dec25','2 y 84-86')}
+];
+function renderM4(){
+  const head=`<div class="mod-head"><span class="num">4</span><div><h2>¿Sabías que…?</h2><p>20 hallazgos con cifras de los documentos y la reforma energética.</p></div></div>`;
+  const chips=`<div class="chips" id="f-chips"><button class="chip" data-k="all" aria-pressed="true">Todos (20)</button>${Object.entries(FTOP).map(([k,v])=>`<button class="chip" data-k="${k}" aria-pressed="false">${v} (5)</button>`).join('')}</div>`;
+  const A=sec(1,'Hallazgos por tema',chips+`<div class="grid g2" id="f-grid"></div>`);
+  const cap=NAC.capSerie, lim=NAC.limpiasSerie;
+  const B=sec(2,'La reforma energética de 2013 y su marco posterior',`
+   <h4>Línea de tiempo</h4><div class="chips" id="tl-chips">${EVENTS.map((e,i)=>`<button class="chip" data-i="${i}" aria-pressed="${i===0}">${e.y.slice(0,4)}</button>`).join('')}</div><div id="tl-detail"></div>
+   <h4 style="margin-top:18px">Cambios estructurales</h4>
+   <svg viewBox="0 0 640 150" class="chart" role="img" aria-label="Estructura: generación, transmisión, distribución, comercialización"><g font-size="12" text-anchor="middle">
+    ${['Generación','Transmisión','Distribución','Comercialización'].map((n,i)=>`<rect x="${14+i*158}" y="20" width="146" height="60" rx="10" fill="${['#79A928','#224C76','#0F3254','#FDAD17'][i]}"/><text x="${87+i*158}" y="54" fill="${i===3?'#071F3C':'#fff'}" font-weight="700">${n}</text>`).join('')}
+    <text x="320" y="108" fill="#4A6078">Marco de 2013-2014: «estricta separación legal» entre actividades (LIE art. 8)</text>
+    <text x="320" y="128" fill="#4A6078">Generación y comercialización en libre competencia (art. 4); transmisión y distribución, servicio público</text></g></svg>
+   ${callout('El esquema resume los artículos citados; el detalle de cómo se aplica cada actividad en el marco de 2025 debe leerse en el decreto (DOF 18/03/2025).')}
+   <h4 style="margin-top:18px">Cinco repercusiones documentadas</h4><div class="grid g2">
+   ${card({title:'1. Participación de CFE en la generación nacional',badges:['cfe'],body:barsSVG({labels:CFE_SHARE.years.map(String),series:[{name:'% de CFE',color:'#224C76',values:CFE_SHARE.vals}],unit:'%',showVals:true,fmt:v=>nf(v,1),h:210}),src:CFE_SHARE.src})}
+   ${card({title:'2. Capacidad instalada nacional 2016-2022',badges:['nac'],body:lineSVG({xs:cap.years.map(String),series:[{name:'MW',color:'#79A928',ys:cap.vals}],unit:'MW',h:220,fmt:v=>nf(v)}),src:ref('prod','53')})}
+   ${card({title:'3. Participación de energías limpias 2018-2022',badges:['nac'],body:lineSVG({xs:lim.years.map(String),series:[{name:'% limpias',color:'#FDAD17',ys:lim.vals}],unit:'%',h:220,fmt:v=>nf(v,1)}),src:ref('prod','60')})}
+   ${card({title:'4. Energía limpia 2023: CFE vs privados',badges:['cfe'],body:barsSVG({labels:['CFE','Privados'],series:[{name:'% limpia',color:'#79A928',values:[CFE_LIMPIA_2023_TXT.pctNeta,CFE_LIMPIA_2023_TXT.privadosPct]}],unit:'%',showVals:true,fmt:v=>nf(v,1),h:210})+'<p class="src">Cifras tal como las publica CFE; la base de cálculo no es idéntica a la generación bruta (ver verificación de datos).</p>',src:CFE_LIMPIA_2023_TXT.src})}
+   ${card({title:'5. Mercado Eléctrico Mayorista',badges:['legal'],body:'<p>El MEM, operado por el CENACE, empezó a funcionar en 2016 según el Informe CFE 2024. Los informes cargados no traen precios, volúmenes ni tarifas comparables antes y después.</p>'+kpi('Dato no disponible','','tarifas e inversión asociada',true),src:ref('cfe24','26')})}
+   </div>
+   <h4 style="margin-top:18px">Comparación histórica</h4>
+   <div class="cmp"><div class="card"><h4>Antes de 2013</h4><p>Dato no disponible: los documentos cargados no describen en detalle el régimen previo; el decreto de 2013 solo lo modifica.</p>${kpi('Dato no disponible','','capacidad y tarifas previas',true)}</div>
+   <div class="card"><h4>2013-2014</h4><ul><li>Reforma de arts. 25, 27 y 28 constitucionales.</li><li>LIE: separación legal, CENACE y mercado.</li><li>Transitorio Cuarto: CFE se separa contable, operativa, funcional y legalmente.</li></ul></div>
+   <div class="card"><h4>2024-2025</h4><ul><li>CFE: ${nf(CFE_SHARE.vals[2])} % de la generación nacional en 2024 según su informe.</li><li>Decreto del 18/03/2025: Ley del Sector Eléctrico y Ley de la Empresa Pública del Estado CFE.</li><li>La nucleoeléctrica sigue siendo Energía Limpia por ley.</li></ul></div></div>
+   <h4 style="margin-top:18px">Objetivos, cambios legales y resultados observados</h4>
+   <div class="scroll"><table class="t"><thead><tr><th>Objetivo</th><th>Cambio legal</th><th>Resultado observable en los documentos</th></tr></thead><tbody>
+   <tr><td>Abrir generación a competencia</td><td>LIE art. 4</td><td>CFE 41.1 → 42.3 % de la generación (2022-2024). No se mide competencia.</td></tr>
+   <tr><td>Operación independiente del sistema</td><td>CENACE, LIE art. 107</td><td>Dato no disponible (sin indicadores de desempeño)</td></tr>
+   <tr><td>Más energía limpia</td><td>Definición de Energías Limpias</td><td>Limpias 22.5 → 31.2 % (2018-2022, nacional)</td></tr>
+   <tr><td>Más capacidad</td><td>Mercado y permisos</td><td>66,664 → 89,890 MW (2016-2022, nacional)</td></tr></tbody></table></div>
+   ${callout('<b>Sin causalidad automática:</b> que dos cosas ocurran en el mismo periodo no prueba que una cause la otra. Las posturas políticas a favor o en contra de la reforma <b>no están documentadas en los archivos cargados</b> y por eso no se resumen aquí.','warn')}`);
+  return head+A+B;
+}
+function initM4(){
+  const F=findings(); const grid=$('#f-grid');
+  const draw=k=>{ grid.innerHTML=F.filter(f=>k==='all'||f.t===k).map(f=>card({title:f.h,badges:f.badges,body:`<p>${tx(f.b)}</p>`,src:f.src,cls:'fcard'})).join(''); };
+  draw('all');
+  $('#f-chips').addEventListener('click',e=>{const b=e.target.closest('.chip'); if(!b) return; $$('#f-chips .chip').forEach(x=>x.setAttribute('aria-pressed',x===b)); draw(b.dataset.k);});
+  const show=i=>{const e=EVENTS[i]; $('#tl-detail').innerHTML=card({title:e.y+': '+e.t,badges:['legal'],body:`<p>${tx(e.d)}</p>`,src:e.s});};
+  $('#tl-chips').addEventListener('click',e=>{const b=e.target.closest('.chip'); if(!b) return; $$('#tl-chips .chip').forEach(x=>x.setAttribute('aria-pressed',x===b)); show(+b.dataset.i);}); show(0);
+}
+
+/* ===================== APP: router, tema ===================== */
+const MODS=[
+ {id:'m0',t:'0 · Recursos',r:()=>renderM0(),i:()=>initM0()},
+ {id:'m1',t:'1 · Generación',r:()=>renderM1(),i:()=>initM1()},
+ {id:'m2',t:'2 · Transmisión',r:()=>renderM2(),i:()=>initM2()},
+ {id:'m3',t:'3 · Distribución',r:()=>renderM3(),i:()=>initM3()},
+ {id:'m4',t:'4 · ¿Sabías que?',r:()=>renderM4(),i:()=>initM4()}
+];
+const done={};
+function go(id){
+  const m=MODS.find(x=>x.id===id)||MODS[0];
+  if(!done[m.id]){
+    const el=$('#'+m.id);
+    try{ el.innerHTML=m.r(); done[m.id]=true; Promise.resolve(m.i()).catch(e=>console.error(m.id,e)); }
+    catch(e){ console.error(m.id,e); el.innerHTML='<div class="callout bad">Error al cargar este módulo: '+esc(e.message)+'</div>'; }
+  }
+  $$('section.mod').forEach(s=>s.classList.toggle('on',s.id===m.id));
+  $$('nav.tabs button').forEach(b=>b.setAttribute('aria-current',b.dataset.m===m.id));
+  try{ if(location.hash!=='#'+m.id) history.replaceState(null,'','#'+m.id); }catch(e){}
+  window.scrollTo({top:0});
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  $('nav.tabs').innerHTML=MODS.map(m=>`<button data-m="${m.id}">${m.t}</button>`).join('');
+  $('nav.tabs').addEventListener('click',e=>{const b=e.target.closest('button'); if(b) go(b.dataset.m);});
+  $('#theme').onclick=()=>{const d=document.documentElement; const cur=d.dataset.theme|| (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'); d.dataset.theme=cur==='dark'?'light':'dark';};
+  $('#start').onclick=()=>go('m0');
+  window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+  let h0=''; try{h0=location.hash.slice(1);}catch(e){} go(h0||'m0');
+});
+</script></body></html>
